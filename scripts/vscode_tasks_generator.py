@@ -26,7 +26,6 @@ class Settings:
         self.build_type = BuildType.DEBUG
         self.compiler = "clang++"
         self.make_tool = "Ninja"
-        self.toolchain_file = "vcpkg/scripts/buildsystems/vcpkg.cmake"
         self.stop_on_first_error = StopOnFirstError.YES
         self.export_compile_commands = ExportCompileCommands.YES
         self.executable_name = "wofares_game_engine"
@@ -247,8 +246,8 @@ def generate_005_git_submodule_update_task(s: Settings):
 
 def generate_007_install_vcpkg_as_subfolder_task(s: Settings):
     command = {
-        Platform.WINDOWS: f"{s.setup_env()} git clone https://github.com/microsoft/vcpkg && .\\vcpkg\\bootstrap-vcpkg.bat && .\\vcpkg\\vcpkg install --triplet={s.triplet()}",
-        Platform.LINUX: f"{s.setup_env()} git clone https://github.com/microsoft/vcpkg && ./vcpkg/bootstrap-vcpkg.sh && ./vcpkg/vcpkg install --triplet={s.triplet()}",
+        Platform.WINDOWS: f"{s.setup_env()} git clone --branch 2024.06.15 --single-branch https://github.com/microsoft/vcpkg && .\\vcpkg\\bootstrap-vcpkg.bat && .\\vcpkg\\vcpkg install --triplet={s.triplet()}",
+        Platform.LINUX: f"{s.setup_env()} git clone --branch 2024.06.15 --single-branch https://github.com/microsoft/vcpkg && ./vcpkg/bootstrap-vcpkg.sh && ./vcpkg/vcpkg install --triplet={s.triplet()}",
     }[s.platform]
 
     return {
@@ -265,8 +264,9 @@ def generate_010_cmake_configure_task(s: Settings):
 
     command = (
         f" {s.setup_env()} cmake -S . -B {s.build_folder()}"
+        f" --preset use_vcpkg"
         f" -DCMAKE_BUILD_TYPE={s.build_type_name()}"
-        f" -G{s.make_tool} -DCMAKE_CXX_COMPILER={s.compiler} -DCMAKE_TOOLCHAIN_FILE={s.toolchain_file}"
+        f" -G{s.make_tool} -DCMAKE_CXX_COMPILER={s.compiler}"
         f" {s.vcpkg_extra_args()} {export_compile_commands}"
         f" && cmake -E copy {s.build_folder()}/compile_commands.json build/compile_commands.json",  # compile_commands.json is visible from `build` folder only
     )

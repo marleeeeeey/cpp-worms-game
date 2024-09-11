@@ -171,7 +171,9 @@ First, we bootstrap a project-specific installation of vcpkg ("manifest mode") i
 
 ```bash
 cd wofares_game_engine
-git clone https://github.com/microsoft/vcpkg
+# Branch 2024.06.15 is used because of error on the latest master.
+# see: https://github.com/microsoft/vcpkg/issues/40912
+git clone --branch 2024.06.15 --single-branch https://github.com/microsoft/vcpkg
 .\vcpkg\bootstrap-vcpkg.bat
 ```
 
@@ -235,8 +237,10 @@ pip install jinja2
 
 ```bash
 cd wofares_game_engine
-git clone https://github.com/microsoft/vcpkg && ./vcpkg/bootstrap-vcpkg.sh && ./vcpkg/vcpkg install --triplet=x64-linux
-cmake -S . -B build -G "Ninja" -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+# Branch 2024.06.15 is used because of error on the latest master.
+# see: https://github.com/microsoft/vcpkg/issues/40912
+git clone --branch 2024.06.15 --single-branch https://github.com/microsoft/vcpkg && ./vcpkg/bootstrap-vcpkg.sh && ./vcpkg/vcpkg install --triplet=x64-linux
+cmake -S . -B build -GNinja --preset use_vcpkg -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 cmake --build build/debug -- -k 0
 cmake -E copy config.json build/debug/src/config.json
 cmake -E copy_directory assets build/debug/src/assets
@@ -272,14 +276,28 @@ class WebBuildSettings:
 
 #### Build, run and debug manually (Web)
 
+**Install EMSDK**
+
+```bash
+git clone https://github.com/emscripten-core/emsdk.git
+cd emsdk
+emsdk install latest
+emsdk activate latest
+# add C:\dev\emsdk\upstream\emscripten\ to the PATH via Environment Variables
+```
+
+**Build Game**
+
 ```bash
 cd wofares_game_engine
 
 git submodule update --init --recursive
 
-C:/dev/emsdk/emsdk_env.bat &&  git clone https://github.com/microsoft/vcpkg && .\\vcpkg\\bootstrap-vcpkg.bat && .\\vcpkg\\vcpkg install --triplet=wasm32-emscripten
+# Branch 2024.06.15 is used because of error on the latest master.
+# see: https://github.com/microsoft/vcpkg/issues/40912
+C:/dev/emsdk/emsdk_env.bat &&  git clone --branch 2024.06.15 --single-branch https://github.com/microsoft/vcpkg && .\\vcpkg\\bootstrap-vcpkg.bat && .\\vcpkg\\vcpkg install --triplet=wasm32-emscripten
 
-C:/dev/emsdk/emsdk_env.bat &&  cmake -S . -B build/debug_web -DCMAKE_BUILD_TYPE=Debug -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=C:/dev/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DCMAKE_MAKE_PROGRAM=C:/dev/in_system_path/ninja.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+C:/dev/emsdk/emsdk_env.bat &&  cmake -S . -B build/debug_web -DCMAKE_BUILD_TYPE=Debug -GNinja -DCMAKE_CXX_COMPILER=clang++ -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=C:/dev/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DCMAKE_MAKE_PROGRAM=C:/dev/in_system_path/ninja.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
 C:/dev/emsdk/emsdk_env.bat &&  cmake --build build/debug_web -- -k 0
 ```

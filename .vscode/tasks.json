@@ -34,13 +34,13 @@
         },
         {
             "label": "007. Install vcpkg as subfolder",
-            "command": " git clone https://github.com/microsoft/vcpkg && .\\vcpkg\\bootstrap-vcpkg.bat && .\\vcpkg\\vcpkg install --triplet=x64-Windows",
+            "command": " git clone --branch 2024.06.15 --single-branch https://github.com/microsoft/vcpkg && .\\vcpkg\\bootstrap-vcpkg.bat && .\\vcpkg\\vcpkg install --triplet=x64-Windows",
             "type": "shell"
         },
         {
             "label": "010. (+) Configure",
             "command": [
-                "  cmake -S . -B build/Debug -DCMAKE_BUILD_TYPE=Debug -GNinja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && cmake -E copy build/Debug/compile_commands.json build/compile_commands.json"
+                "  cmake -S . -B build/Debug --preset use_vcpkg -DCMAKE_BUILD_TYPE=Debug -GNinja -DCMAKE_CXX_COMPILER=clang++   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && cmake -E copy build/Debug/compile_commands.json build/compile_commands.json"
             ],
             "dependsOn": [],
             "options": {

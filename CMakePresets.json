@@ -1,0 +1,24 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "use_vcpkg",
+            "displayName": "use_vcpkg",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "vcpkg/scripts/buildsystems/vcpkg.cmake"
+            }
+        },
+        {
+            "name": "use_vcpkg_for_web",
+            "displayName": "use_vcpkg",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "C:/dev/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+            }
+        },
+        {
+            "name": "use_native",
+            "displayName": "use_native"
+        }
+    ]
+}

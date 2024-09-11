@@ -69,7 +69,7 @@ int main([[maybe_unused]] int argc, char* args[])
 
         // Log initial information.
         MY_LOG(info, "*********************************************");
-        MY_LOG(info, "****** Wofares Game Engine started *****");
+        MY_LOG(info, "******** Wofares Game Engine started ********");
         MY_LOG(info, "*********************************************");
         MY_LOG(info, "Current directory set to: {}", execDir);
         MY_LOG(info, "Config file loaded: {}", configFilePath.string());
