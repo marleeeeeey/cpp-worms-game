@@ -25,12 +25,9 @@
 #include <utils/sdl/sdl_utils.h>
 #include <utils/time_utils.h>
 
-GameObjectsFactory::GameObjectsFactory(
-    EnttRegistryWrapper& registryWrapper, ComponentsFactory& componentsFactory, BaseObjectsFactory& baseObjectsFactory)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()),
-    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), box2dBodyCreator(registry),
-    coordinatesTransformer(registry), bodyTuner(registry), componentsFactory(componentsFactory),
-    baseObjectsFactory(baseObjectsFactory)
+GameObjectsFactory::GameObjectsFactory(EnttRegistryWrapper& registryWrapper, ComponentsFactory& componentsFactory, BaseObjectsFactory& baseObjectsFactory)
+  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+    box2dBodyCreator(registry), coordinatesTransformer(registry), bodyTuner(registry), componentsFactory(componentsFactory), baseObjectsFactory(baseObjectsFactory)
 {}
 
 entt::entity GameObjectsFactory::SpawnPlayer(const glm::vec2& posWorld, const std::string& debugName)
@@ -38,8 +35,7 @@ entt::entity GameObjectsFactory::SpawnPlayer(const glm::vec2& posWorld, const st
     auto entity = registryWrapper.Create(debugName);
 
     // AnimationInfo.
-    AnimationComponent playerAnimation =
-        componentsFactory.CreateAnimationComponent("player", "Run", ResourceManager::TagProps::ExactMatch);
+    AnimationComponent playerAnimation = componentsFactory.CreateAnimationComponent("player", "Run", ResourceManager::TagProps::ExactMatch);
     registry.emplace<AnimationComponent>(entity, playerAnimation);
 
     // PlayerInfo.
@@ -62,17 +58,14 @@ entt::entity GameObjectsFactory::SpawnPlayer(const glm::vec2& posWorld, const st
     return entity;
 }
 
-entt::entity GameObjectsFactory::SpawnBullet(
-    glm::vec2 initialBulletPosWorld, float initialBulletSpeed, float weaponDirection, const WeaponProps& weaponProps)
+entt::entity GameObjectsFactory::SpawnBullet(glm::vec2 initialBulletPosWorld, float initialBulletSpeed, float weaponDirection, const WeaponProps& weaponProps)
 {
     // Prepare the bullet animation.
-    AnimationComponent fireballAnimation = componentsFactory.CreateAnimationComponent(
-        weaponProps.animationName, weaponProps.animationTag, ResourceManager::TagProps::ExactMatch);
+    AnimationComponent fireballAnimation = componentsFactory.CreateAnimationComponent(weaponProps.animationName, weaponProps.animationTag, ResourceManager::TagProps::ExactMatch);
     glm::vec2 fireballHitboxSizeWorld = fireballAnimation.GetHitboxSize();
 
-    entt::entity bulletEntity = baseObjectsFactory.SpawnFlyingEntity(
-        initialBulletPosWorld, fireballHitboxSizeWorld, weaponDirection, initialBulletSpeed,
-        weaponProps.bulletAnglePolicy);
+    entt::entity bulletEntity =
+        baseObjectsFactory.SpawnFlyingEntity(initialBulletPosWorld, fireballHitboxSizeWorld, weaponDirection, initialBulletSpeed, weaponProps.bulletAnglePolicy);
     bodyTuner.ApplyOption(bulletEntity, Box2dBodyOptions::BulletPolicy::Bullet);
     Box2dBodyOptions::CollisionPolicy collisionPolicy;
     collisionPolicy.ownCategoryOfCollision = CollisionFlags::Bullet;
@@ -110,8 +103,7 @@ entt::entity GameObjectsFactory::SpawnBuildingBlock(glm::vec2 posWorld)
 {
     auto entity = registryWrapper.Create("BuildingBlock");
 
-    AnimationComponent buildingBlockAnimation =
-        componentsFactory.CreateAnimationComponent("buildingBlock", "block", ResourceManager::TagProps::ExactMatch);
+    AnimationComponent buildingBlockAnimation = componentsFactory.CreateAnimationComponent("buildingBlock", "block", ResourceManager::TagProps::ExactMatch);
     registry.emplace<AnimationComponent>(entity, buildingBlockAnimation);
 
     Box2dBodyOptions options;
@@ -128,8 +120,7 @@ entt::entity GameObjectsFactory::SpawnPortal(const glm::vec2& posWorld, const st
     auto entity = registryWrapper.Create(debugName);
 
     // AnimationInfo.
-    AnimationComponent portalAnimation =
-        componentsFactory.CreateAnimationComponent("portal", "Suction", ResourceManager::TagProps::ExactMatch);
+    AnimationComponent portalAnimation = componentsFactory.CreateAnimationComponent("portal", "Suction", ResourceManager::TagProps::ExactMatch);
     registry.emplace<AnimationComponent>(entity, portalAnimation);
 
     // PortalComponent.
@@ -170,8 +161,7 @@ entt::entity GameObjectsFactory::SpawnTurret(const glm::vec2& posWorld, const st
     auto entity = registryWrapper.Create(debugName);
 
     // AnimationInfo.
-    AnimationComponent portalAnimation =
-        componentsFactory.CreateAnimationComponent("turret", "Idle", ResourceManager::TagProps::ExactMatch);
+    AnimationComponent portalAnimation = componentsFactory.CreateAnimationComponent("turret", "Idle", ResourceManager::TagProps::ExactMatch);
     registry.emplace<AnimationComponent>(entity, portalAnimation);
 
     // TurretComponent.

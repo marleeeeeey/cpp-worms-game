@@ -10,8 +10,8 @@
 #include <utils/math_utils.h>
 
 PhysicsSystem::PhysicsSystem(EnttRegistryWrapper& registryWrapper)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()),
-    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), coordinatesTransformer(registry)
+  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+    coordinatesTransformer(registry)
 {}
 
 void PhysicsSystem::Update(float deltaTime)
@@ -52,8 +52,7 @@ void PhysicsSystem::UpdatePlayersWeaponDirection()
         const auto& [physicalBody, playerInfo] = players.get<PhysicsComponent, PlayerComponent>(entity);
 
         auto& lastMousePosInWindow = gameState.windowOptions.lastMousePosInWindow;
-        glm::vec2 playerPosInWindow =
-            coordinatesTransformer.PhysicsToScreen(physicalBody.bodyRAII->GetBody()->GetPosition());
+        glm::vec2 playerPosInWindow = coordinatesTransformer.PhysicsToScreen(physicalBody.bodyRAII->GetBody()->GetPosition());
 
         playerInfo.weaponDirection = glm::normalize(lastMousePosInWindow - playerPosInWindow);
     }

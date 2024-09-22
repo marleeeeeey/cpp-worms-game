@@ -4,12 +4,10 @@
 #include <ecs/components/physics_components.h>
 
 Box2dBodyTuner::Box2dBodyTuner(entt::registry& registry)
-  : registry(registry), coordinatesTransformer(registry),
-    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front()))
+  : registry(registry), coordinatesTransformer(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front()))
 {}
 
-PhysicsComponent& Box2dBodyTuner::CreatePhysicsComponent(
-    entt::entity entity, const glm::vec2& posWorld, float angle, const Box2dBodyOptions& options)
+PhysicsComponent& Box2dBodyTuner::CreatePhysicsComponent(entt::entity entity, const glm::vec2& posWorld, float angle, const Box2dBodyOptions& options)
 {
     b2Body* body = CreatePhysicsBodyWithNoShape(entity, posWorld);
     auto box2dObjectRAII = std::make_shared<Box2dObjectRAII>(body, gameState.physicsWorld);

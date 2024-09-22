@@ -11,8 +11,7 @@
 #include <utils/sdl/sdl_gfx_wrapper.h>
 
 RenderHUDSystem::RenderHUDSystem(entt::registry& registry, SDL_Renderer* renderer, nlohmann::json assetsSettingsJson)
-  : registry(registry), renderer(renderer), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
-    assetsSettingsJson(assetsSettingsJson)
+  : registry(registry), renderer(renderer), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), assetsSettingsJson(assetsSettingsJson)
 {}
 
 void RenderHUDSystem::Render()
@@ -68,9 +67,7 @@ void RenderHUDSystem::RenderDebugMenu()
 
     // Print debug info.
     ImGui::TextUnformatted(MY_FMT("Space pressed duration: {:.2f}", gameState.debugInfo.spacePressedDuration).c_str());
-    ImGui::TextUnformatted(
-        MY_FMT("Space pressed duration on up event: {:.2f}", gameState.debugInfo.spacePressedDurationOnUpEvent)
-            .c_str());
+    ImGui::TextUnformatted(MY_FMT("Space pressed duration on up event: {:.2f}", gameState.debugInfo.spacePressedDurationOnUpEvent).c_str());
 
     // Print last mouse position.
     const auto& lastMousePosition = gameState.windowOptions.lastMousePosInWindow;
@@ -115,8 +112,7 @@ void RenderHUDSystem::RenderGrid()
     // Draw horizontal grid lines
     for (int y = startY; y <= endY; y += gridSize)
     {
-        int screenY =
-            static_cast<int>((y - cameraCenterSdl.y) * gameState.windowOptions.cameraScale + windowHeight / 2);
+        int screenY = static_cast<int>((y - cameraCenterSdl.y) * gameState.windowOptions.cameraScale + windowHeight / 2);
         SDL_RenderDrawLine(renderer, 0, screenY, windowWidth, screenY);
     }
 
@@ -141,8 +137,7 @@ void RenderHUDSystem::DrawPlayersWindowInfo()
             reloadingStatus = "Fire rate...";
 
         ImGui::TextUnformatted(MY_FMT(
-                                   "{}, Ammo: {}/{} {}", playerInfo.currentWeapon,
-                                   playerInfo.weapons.at(playerInfo.currentWeapon).ammoInClip,
+                                   "{}, Ammo: {}/{} {}", playerInfo.currentWeapon, playerInfo.weapons.at(playerInfo.currentWeapon).ammoInClip,
                                    playerInfo.weapons.at(playerInfo.currentWeapon).ammoInStorage, reloadingStatus)
                                    .c_str());
 
@@ -157,9 +152,8 @@ void RenderHUDSystem::ShowGameInstructions()
     bool open = true;
     ImGui::Begin(
         "Game Instructions", &open,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoSavedSettings);
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
+            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
 
     ImGui::SetWindowFontScale(2.5);
 
@@ -215,9 +209,8 @@ void RenderHUDSystem::ShowLevelCompleteScreen(bool isWin)
     bool open = true;
     ImGui::Begin(
         "Level Complete", &open,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoSavedSettings);
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
+            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
 
     ImGui::SetWindowFontScale(3);
 
@@ -257,8 +250,7 @@ void RenderHUDSystem::ShowLevelCompleteScreen(bool isWin)
 
         // Find the current map in the list of maps.
         auto currentMapName = gameState.levelOptions.mapName;
-        auto currentMapIt = std::find_if(
-            maps.begin(), maps.end(), [&currentMapName](const auto& map) { return map["name"] == currentMapName; });
+        auto currentMapIt = std::find_if(maps.begin(), maps.end(), [&currentMapName](const auto& map) { return map["name"] == currentMapName; });
 
         // Find the next map in the list of maps.
         auto nextMapIt = currentMapIt + 1;

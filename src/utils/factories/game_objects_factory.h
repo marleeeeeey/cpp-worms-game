@@ -27,14 +27,10 @@ class GameObjectsFactory
     ComponentsFactory& componentsFactory;
     BaseObjectsFactory& baseObjectsFactory;
 public:
-    GameObjectsFactory(
-        EnttRegistryWrapper& registryWrapper, ComponentsFactory& componentsFactory,
-        BaseObjectsFactory& baseObjectsFactory);
+    GameObjectsFactory(EnttRegistryWrapper& registryWrapper, ComponentsFactory& componentsFactory, BaseObjectsFactory& baseObjectsFactory);
 public: // Main game objects.
     entt::entity SpawnPlayer(const glm::vec2& posWorld, const std::string& debugName);
-    entt::entity SpawnBullet(
-        glm::vec2 initialBulletPosWorld, float initialBulletSpeed, float weaponDirection,
-        const WeaponProps& weaponProps);
+    entt::entity SpawnBullet(glm::vec2 initialBulletPosWorld, float initialBulletSpeed, float weaponDirection, const WeaponProps& weaponProps);
     entt::entity SpawnBuildingBlock(glm::vec2 posWorld);
     entt::entity SpawnPortal(const glm::vec2& posWorld, const std::string& debugName);
     entt::entity SpawnTurret(const glm::vec2& posWorld, const std::string& debugName);

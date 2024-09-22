@@ -33,8 +33,7 @@ class MapLoaderSystem
     LevelInfo currentLevelInfo;
 public:
     MapLoaderSystem(
-        EnttRegistryWrapper& registryWrapper, ResourceManager& resourceManager,
-        Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory,
+        EnttRegistryWrapper& registryWrapper, ResourceManager& resourceManager, Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory,
         BaseObjectsFactory& baseObjectsFactory);
     void LoadMap(const LevelInfo& levelInfo);
 private:

@@ -8,6 +8,5 @@ class ComponentsFactory
 public:
     ComponentsFactory(ResourceManager& resourceManager);
 
-    AnimationComponent CreateAnimationComponent(
-        const std::string& animationName, const std::string& tagName, ResourceManager::TagProps tagProps);
+    AnimationComponent CreateAnimationComponent(const std::string& animationName, const std::string& tagName, ResourceManager::TagProps tagProps);
 };

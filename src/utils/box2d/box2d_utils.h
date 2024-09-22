@@ -14,6 +14,5 @@ class Box2dUtils
 public:
     Box2dUtils(entt::registry& registry);
 public: ////////////////////////////////////////// Client methods. ////////////////////////////////////////
-    void ApplyForceToPhysicalBodies(
-        std::vector<entt::entity> physicalEntities, const glm::vec2& forceCenterWorld, float force);
+    void ApplyForceToPhysicalBodies(std::vector<entt::entity> physicalEntities, const glm::vec2& forceCenterWorld, float force);
 };

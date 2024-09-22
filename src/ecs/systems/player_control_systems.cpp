@@ -18,12 +18,10 @@
 #include <utils/systems/input_event_manager.h>
 
 PlayerControlSystem::PlayerControlSystem(
-    EnttRegistryWrapper& registryWrapper, InputEventManager& inputEventManager,
-    Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory, AudioSystem& audioSystem)
-  : registry(registryWrapper.GetRegistry()), inputEventManager(inputEventManager),
-    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), coordinatesTransformer(registry),
-    box2dBodyCreator(registry), contactListener(contactListener), gameObjectsFactory(gameObjectsFactory),
-    audioSystem(audioSystem)
+    EnttRegistryWrapper& registryWrapper, InputEventManager& inputEventManager, Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory,
+    AudioSystem& audioSystem)
+  : registry(registryWrapper.GetRegistry()), inputEventManager(inputEventManager), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+    coordinatesTransformer(registry), box2dBodyCreator(registry), contactListener(contactListener), gameObjectsFactory(gameObjectsFactory), audioSystem(audioSystem)
 {
     SubscribeToInputEvents();
     SubscribeToContactListener();
@@ -87,30 +85,23 @@ void PlayerControlSystem::SubscribeToInputEvents()
     // TODO2: Think. Maybe move this logic to the InputEventManager.
     inputEventManager.Subscribe(
         InputEventManager::EventType::ButtonHold,
-        [this](const InputEventManager::EventInfo& eventInfo)
-        { eventsQueueByType[InputEventManager::EventType::ButtonHold].push(eventInfo); });
+        [this](const InputEventManager::EventInfo& eventInfo) { eventsQueueByType[InputEventManager::EventType::ButtonHold].push(eventInfo); });
 
     inputEventManager.Subscribe(
         InputEventManager::EventType::ButtonReleaseAfterHold,
-        [this](const InputEventManager::EventInfo& eventInfo)
-        { eventsQueueByType[InputEventManager::EventType::ButtonReleaseAfterHold].push(eventInfo); });
+        [this](const InputEventManager::EventInfo& eventInfo) { eventsQueueByType[InputEventManager::EventType::ButtonReleaseAfterHold].push(eventInfo); });
 
     inputEventManager.Subscribe(
         InputEventManager::EventType::RawSdlEvent,
-        [this](const InputEventManager::EventInfo& eventInfo)
-        { eventsQueueByType[InputEventManager::EventType::RawSdlEvent].push(eventInfo); });
+        [this](const InputEventManager::EventInfo& eventInfo) { eventsQueueByType[InputEventManager::EventType::RawSdlEvent].push(eventInfo); });
 }
 
 void PlayerControlSystem::SubscribeToContactListener()
 {
     contactListener.SubscribeContact(
-        Box2dEnttContactListener::ContactType::BeginSensor,
-        [this](const Box2dEnttContactListener::ContactInfo& contactInfo)
-        { HandlePlayerBeginPlayerContact(contactInfo); });
+        Box2dEnttContactListener::ContactType::BeginSensor, [this](const Box2dEnttContactListener::ContactInfo& contactInfo) { HandlePlayerBeginPlayerContact(contactInfo); });
     contactListener.SubscribeContact(
-        Box2dEnttContactListener::ContactType::EndSensor,
-        [this](const Box2dEnttContactListener::ContactInfo& contactInfo)
-        { HandlePlayerEndPlayerContact(contactInfo); });
+        Box2dEnttContactListener::ContactType::EndSensor, [this](const Box2dEnttContactListener::ContactInfo& contactInfo) { HandlePlayerEndPlayerContact(contactInfo); });
 }
 
 void PlayerControlSystem::HandlePlayerMovement(const InputEventManager::EventInfo& eventInfo, float deltaTime)
@@ -123,13 +114,11 @@ void PlayerControlSystem::HandlePlayerMovement(const InputEventManager::EventInf
         const auto& [player, physicalBody] = players.get<PlayerComponent, PhysicsComponent>(entity);
         auto body = physicalBody.bodyRAII->GetBody();
 
-        bool allowLeftRightMovement =
-            utils::GetConfig<bool, "PlayerControlSystem.allowLeftRightMovementInAir">() || player.OnGround();
+        bool allowLeftRightMovement = utils::GetConfig<bool, "PlayerControlSystem.allowLeftRightMovementInAir">() || player.OnGround();
 
         auto mass = body->GetMass();
 
-        if (originalEvent.key.keysym.scancode == SDL_SCANCODE_W ||
-            originalEvent.key.keysym.scancode == SDL_SCANCODE_SPACE)
+        if (originalEvent.key.keysym.scancode == SDL_SCANCODE_W || originalEvent.key.keysym.scancode == SDL_SCANCODE_SPACE)
         {
             if (player.OnGround() || player.allowJumpForceInAir)
             {
@@ -306,30 +295,23 @@ entt::entity PlayerControlSystem::MakeShotIfPossible(entt::entity playerEntity, 
 {
     if (!registry.all_of<PlayerComponent, PhysicsComponent, AnimationComponent>(playerEntity))
     {
-        MY_LOG(
-            trace, "[MakeShotIfPossible] entity does not have all of the required components. Entity: {}",
-            playerEntity);
+        MY_LOG(trace, "[MakeShotIfPossible] entity does not have all of the required components. Entity: {}", playerEntity);
         return entt::null;
     }
 
     auto& playerInfo = registry.get<PlayerComponent>(playerEntity);
 
     // Check if the throwing force is zero for the grenade.
-    if (throwingForce <= 0 &&
-        (playerInfo.currentWeapon == WeaponType::Grenade || playerInfo.currentWeapon == WeaponType::Bazooka))
+    if (throwingForce <= 0 && (playerInfo.currentWeapon == WeaponType::Grenade || playerInfo.currentWeapon == WeaponType::Bazooka))
     {
-        MY_LOG(
-            trace, "[MakeShotIfPossible] Throwing force shouldn't be zero for weapon {}. Entity: {}, force: {}",
-            playerInfo.currentWeapon, playerEntity, throwingForce);
+        MY_LOG(trace, "[MakeShotIfPossible] Throwing force shouldn't be zero for weapon {}. Entity: {}, force: {}", playerInfo.currentWeapon, playerEntity, throwingForce);
         return entt::null;
     }
 
     // Check if player has weapon set as current.
     if (!playerInfo.weapons.contains(playerInfo.currentWeapon))
     {
-        MY_LOG(
-            trace, "[MakeShotIfPossible] Player does not have {} weapon set as current. Entity: {}",
-            playerInfo.currentWeapon, static_cast<int>(playerEntity));
+        MY_LOG(trace, "[MakeShotIfPossible] Player does not have {} weapon set as current. Entity: {}", playerInfo.currentWeapon, static_cast<int>(playerEntity));
         return entt::null;
     }
     WeaponProps& currentWeaponProps = playerInfo.weapons.at(playerInfo.currentWeapon);
@@ -337,26 +319,21 @@ entt::entity PlayerControlSystem::MakeShotIfPossible(entt::entity playerEntity, 
     // Check if player has ammo for the weapon.
     if (currentWeaponProps.ammoInClip == 0)
     {
-        MY_LOG(
-            trace, "[MakeShotIfPossible] Player does not have ammo in clip for the {} weapon. Entity: {}",
-            playerInfo.currentWeapon, static_cast<int>(playerEntity));
+        MY_LOG(trace, "[MakeShotIfPossible] Player does not have ammo in clip for the {} weapon. Entity: {}", playerInfo.currentWeapon, static_cast<int>(playerEntity));
         return entt::null;
     }
 
     // Check if player is in the reload process.
     if (currentWeaponProps.remainingReloadTime > 0)
     {
-        MY_LOG(
-            warn, "[MakeShotIfPossible] Player is in the reload process. Entity: {}", static_cast<int>(playerEntity));
+        MY_LOG(warn, "[MakeShotIfPossible] Player is in the reload process. Entity: {}", static_cast<int>(playerEntity));
         return entt::null;
     }
 
     // Check if player in the fire rate cooldown.
     if (currentWeaponProps.remainingFireRate > 0)
     {
-        MY_LOG(
-            trace, "[MakeShotIfPossible] Player is in the fire rate cooldown. Entity: {}",
-            static_cast<int>(playerEntity));
+        MY_LOG(trace, "[MakeShotIfPossible] Player is in the fire rate cooldown. Entity: {}", static_cast<int>(playerEntity));
         return entt::null;
     }
 
@@ -377,9 +354,7 @@ entt::entity PlayerControlSystem::MakeShotIfPossible(entt::entity playerEntity, 
     // Check if player has weapon set as current.
     if (!playerInfo.weapons.contains(playerInfo.currentWeapon))
     {
-        MY_LOG(
-            trace, "[CreateBullet] Player does not have {} weapon set as current. Entity: {}", playerInfo.currentWeapon,
-            playerEntity);
+        MY_LOG(trace, "[CreateBullet] Player does not have {} weapon set as current. Entity: {}", playerInfo.currentWeapon, playerEntity);
         return entt::null;
     }
     const WeaponProps& weaponProps = playerInfo.weapons.at(playerInfo.currentWeapon);
@@ -421,8 +396,7 @@ void PlayerControlSystem::UpdateFireRateAndReloadTime(entt::entity playerEntity,
                 weaponProps.ammoInClip = std::min(weaponProps.clipSize, weaponProps.ammoInStorage);
                 weaponProps.ammoInStorage -= weaponProps.ammoInClip;
                 MY_LOG(
-                    trace, "Player {} reloaded weapon {}. Ammo in clip: {}, ammo in storage: {}", playerInfo.number,
-                    weaponType, weaponProps.ammoInClip, weaponProps.ammoInStorage);
+                    trace, "Player {} reloaded weapon {}. Ammo in clip: {}, ammo in storage: {}", playerInfo.number, weaponType, weaponProps.ammoInClip, weaponProps.ammoInStorage);
             }
         }
     }

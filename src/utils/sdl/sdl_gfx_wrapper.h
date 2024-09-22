@@ -9,13 +9,9 @@ enum class FillOption
     Outlined
 };
 
-int DrawPoligon(
-    SDL_Renderer* renderer, std::vector<glm::vec2> vertices, SDL_Color color,
-    FillOption fillOption = FillOption::Outlined);
+int DrawPoligon(SDL_Renderer* renderer, std::vector<glm::vec2> vertices, SDL_Color color, FillOption fillOption = FillOption::Outlined);
 
-int DrawCircle(
-    SDL_Renderer* renderer, glm::vec2 center, float radius, SDL_Color color,
-    FillOption fillOption = FillOption::Outlined);
+int DrawCircle(SDL_Renderer* renderer, glm::vec2 center, float radius, SDL_Color color, FillOption fillOption = FillOption::Outlined);
 
 void DrawCross(SDL_Renderer* renderer, int centerX, int centerY, int size, const SDL_Color& color);
 

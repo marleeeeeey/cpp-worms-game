@@ -20,12 +20,9 @@ public:
 public:
     void RenderRect(const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, ColorName color);
     void RenderCircle(const glm::vec2& centerWorld, float radiusWorld, ColorName color);
-    void RenderTile(
-        const TileComponent& tileInfo, const glm::vec2& centerWorld, const float angle,
-        const SDL_RendererFlip& flip = SDL_FLIP_NONE);
+    void RenderTile(const TileComponent& tileInfo, const glm::vec2& centerWorld, const float angle, const SDL_RendererFlip& flip = SDL_FLIP_NONE);
     void RenderAnimationComponent(const AnimationComponent& animationInfo, glm::vec2 centerWorld, float angle);
-    void RenderAnimationFirstFrame(
-        const Animation& animation, glm::vec2 centerWorld, float angle, const SDL_RendererFlip& flip = SDL_FLIP_NONE);
+    void RenderAnimationFirstFrame(const Animation& animation, glm::vec2 centerWorld, float angle, const SDL_RendererFlip& flip = SDL_FLIP_NONE);
     void RenderBackground(const BackgroundInfo& backgroundInfo);
 private: // Helper methods.
     SDL_Rect GetRectWithCameraTransform(const glm::vec2& posWorld, const glm::vec2& sizeWorld);

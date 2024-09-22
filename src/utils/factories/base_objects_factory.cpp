@@ -25,21 +25,17 @@
 #include <utils/time_utils.h>
 
 BaseObjectsFactory::BaseObjectsFactory(EnttRegistryWrapper& registryWrapper, ComponentsFactory& componentsFactory)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()),
-    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), box2dBodyCreator(registry),
-    coordinatesTransformer(registry), bodyTuner(registry), componentsFactory(componentsFactory)
+  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+    box2dBodyCreator(registry), coordinatesTransformer(registry), bodyTuner(registry), componentsFactory(componentsFactory)
 {}
 
-entt::entity BaseObjectsFactory::SpawnTile(
-    glm::vec2 posWorld, float sizeWorld, const TextureRect& textureRect, SpawnTileOption tileOptions,
-    const std::string& name)
+entt::entity BaseObjectsFactory::SpawnTile(glm::vec2 posWorld, float sizeWorld, const TextureRect& textureRect, SpawnTileOption tileOptions, const std::string& name)
 {
     auto& gap = utils::GetConfig<float, "ObjectsFactory.gapBetweenPhysicalAndVisual">();
     glm::vec2 bodySizeWorld(sizeWorld - gap, sizeWorld - gap);
 
     auto entity = registryWrapper.Create(name);
-    registry.emplace<TileComponent>(
-        entity, glm::vec2(sizeWorld, sizeWorld), textureRect.texture, textureRect.rect, tileOptions.zOrderingType);
+    registry.emplace<TileComponent>(entity, glm::vec2(sizeWorld, sizeWorld), textureRect.texture, textureRect.rect, tileOptions.zOrderingType);
 
     Box2dBodyOptions options;
     options.fixture.restitution = 0.05f;
@@ -76,8 +72,7 @@ entt::entity BaseObjectsFactory::SpawnTile(
 
 entt::entity BaseObjectsFactory::SpawnFragmentAfterExplosion(const glm::vec2& posWorld)
 {
-    AnimationComponent fragmentAnimation = componentsFactory.CreateAnimationComponent(
-        "explosionFragments", "Fragment[\\d]+", ResourceManager::TagProps::RandomByRegex);
+    AnimationComponent fragmentAnimation = componentsFactory.CreateAnimationComponent("explosionFragments", "Fragment[\\d]+", ResourceManager::TagProps::RandomByRegex);
     glm::vec2 fragmentSizeWorld = fragmentAnimation.GetHitboxSize();
 
     auto entity = registryWrapper.Create("ExplosionFragment");
@@ -89,8 +84,7 @@ entt::entity BaseObjectsFactory::SpawnFragmentAfterExplosion(const glm::vec2& po
 }
 
 entt::entity BaseObjectsFactory::SpawnFlyingEntity(
-    const glm::vec2& posWorld, const glm::vec2& sizeWorld, float forceDirection, float initialSpeed,
-    Box2dBodyOptions::AnglePolicy anglePolicy)
+    const glm::vec2& posWorld, const glm::vec2& sizeWorld, float forceDirection, float initialSpeed, Box2dBodyOptions::AnglePolicy anglePolicy)
 {
     // Create the flying entity.
     auto flyingEntity = registryWrapper.Create("flyingEntity");
@@ -111,24 +105,19 @@ entt::entity BaseObjectsFactory::SpawnFlyingEntity(
 }
 
 entt::entity BaseObjectsFactory::SpawnDebugVisualObject(
-    const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, const std::string& nameAsKey,
-    const DebugSpawnOptions& debugSpawnOptions)
+    const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, const std::string& nameAsKey, const DebugSpawnOptions& debugSpawnOptions)
 {
     // Search for entity with the same name component.
     auto namedComponents = registry.view<NameComponent, CreationTimeComponent>();
     std::vector<entt::entity> sameNameEntities = {namedComponents.begin(), namedComponents.end()};
     sameNameEntities.erase(
-        std::remove_if(
-            sameNameEntities.begin(), sameNameEntities.end(),
-            [nameAsKey, this](entt::entity e) { return registry.get<NameComponent>(e).name != nameAsKey; }),
+        std::remove_if(sameNameEntities.begin(), sameNameEntities.end(), [nameAsKey, this](entt::entity e) { return registry.get<NameComponent>(e).name != nameAsKey; }),
         sameNameEntities.end());
 
     // Check if the entity with the same name already exists.
     if (debugSpawnOptions.spawnPolicy == BaseObjectsFactory::SpawnPolicyBase::This && sameNameEntities.size() > 0)
     {
-        MY_LOG(
-            info, "[SpawnDebugVisualObject] Entity with the same name already exists. Entity: {}, SpawnPolicy: {}",
-            nameAsKey, debugSpawnOptions.spawnPolicy);
+        MY_LOG(info, "[SpawnDebugVisualObject] Entity with the same name already exists. Entity: {}, SpawnPolicy: {}", nameAsKey, debugSpawnOptions.spawnPolicy);
         return entt::null;
     }
 
@@ -138,10 +127,7 @@ entt::entity BaseObjectsFactory::SpawnDebugVisualObject(
         // Sort components by creation time.
         std::sort(
             sameNameEntities.begin(), sameNameEntities.end(),
-            [this](entt::entity a, entt::entity b) {
-                return registry.get<CreationTimeComponent>(a).creationTime >
-                    registry.get<CreationTimeComponent>(b).creationTime;
-            });
+            [this](entt::entity a, entt::entity b) { return registry.get<CreationTimeComponent>(a).creationTime > registry.get<CreationTimeComponent>(b).creationTime; });
 
         auto trailSize = debugSpawnOptions.trailSize;
 
@@ -160,10 +146,7 @@ entt::entity BaseObjectsFactory::SpawnDebugVisualObject(
             {
                 auto itemToRemove = sameNameEntities[i];
                 auto creationTime = registry.get<CreationTimeComponent>(itemToRemove).creationTime;
-                MY_LOG(
-                    trace,
-                    "[SpawnDebugVisualObject] Destroying entity with the same name. Entity: {}, CreationTime: {}",
-                    nameAsKey, creationTime);
+                MY_LOG(trace, "[SpawnDebugVisualObject] Destroying entity with the same name. Entity: {}, CreationTime: {}", nameAsKey, creationTime);
                 registryWrapper.Destroy(itemToRemove);
             }
             sameNameEntities.resize(trailSize);
@@ -184,13 +167,11 @@ entt::entity BaseObjectsFactory::SpawnDebugVisualObject(
     box2dBodyCreator.CreatePhysicsBody(entity, posWorld, sizeWorld, angle, options);
 
     MY_LOG(
-        trace, "[SpawnDebugVisualObject] Created new DebugVisualObjectComponent: Name {}, Policy {}, Size {}",
-        nameAsKey, debugSpawnOptions.spawnPolicy, sameNameEntities.size());
+        trace, "[SpawnDebugVisualObject] Created new DebugVisualObjectComponent: Name {}, Policy {}, Size {}", nameAsKey, debugSpawnOptions.spawnPolicy, sameNameEntities.size());
     return entity;
 }
 
-entt::entity BaseObjectsFactory::SpawnDebugVisualObject(
-    entt::entity entity, const std::string& nameAsKey, const DebugSpawnOptions& debugSpawnOptions)
+entt::entity BaseObjectsFactory::SpawnDebugVisualObject(entt::entity entity, const std::string& nameAsKey, const DebugSpawnOptions& debugSpawnOptions)
 {
     auto& physicsComponent = registry.get<PhysicsComponent>(entity);
     auto body = physicsComponent.bodyRAII->GetBody();
@@ -219,8 +200,7 @@ std::vector<entt::entity> BaseObjectsFactory::SpawnFragmentsAfterExplosion(glm::
     return fragments;
 }
 
-std::vector<entt::entity> BaseObjectsFactory::SpawnSplittedPhysicalEnteties(
-    const std::vector<entt::entity>& physicalEntities, SDL_Point cellSizeWorld)
+std::vector<entt::entity> BaseObjectsFactory::SpawnSplittedPhysicalEnteties(const std::vector<entt::entity>& physicalEntities, SDL_Point cellSizeWorld)
 {
     assert(cellSizeWorld.x == cellSizeWorld.y);
 
@@ -254,9 +234,7 @@ std::vector<entt::entity> BaseObjectsFactory::SpawnSplittedPhysicalEnteties(
             spawnTileOptions.destructibleOption = SpawnTileOption::DesctructibleOption::Destructible;
             spawnTileOptions.zOrderingType = ZOrderingType::Terrain;
 
-            auto pixelEntity = SpawnTile(
-                pixelCenterWorld, cellSizeWorld.x, TextureRect{originalObjRenderingInfo.texturePtr, pixelTextureRect},
-                spawnTileOptions, "PixeledTile");
+            auto pixelEntity = SpawnTile(pixelCenterWorld, cellSizeWorld.x, TextureRect{originalObjRenderingInfo.texturePtr, pixelTextureRect}, spawnTileOptions, "PixeledTile");
 
             registry.emplace<PixeledTileComponent>(pixelEntity);
 

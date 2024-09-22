@@ -11,12 +11,9 @@
 #include <utils/logger.h>
 #include <utils/sdl/sdl_colors.h>
 
-RenderWorldSystem::RenderWorldSystem(
-    entt::registry& registry, SDL_Renderer* renderer, ResourceManager& resourceManager,
-    SdlPrimitivesRenderer& primitivesRenderer)
-  : registry(registry), renderer(renderer), resourceManager(resourceManager),
-    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), coordinatesTransformer(registry),
-    primitivesRenderer(primitivesRenderer)
+RenderWorldSystem::RenderWorldSystem(entt::registry& registry, SDL_Renderer* renderer, ResourceManager& resourceManager, SdlPrimitivesRenderer& primitivesRenderer)
+  : registry(registry), renderer(renderer), resourceManager(resourceManager), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+    coordinatesTransformer(registry), primitivesRenderer(primitivesRenderer)
 {}
 
 void RenderWorldSystem::Render()
@@ -55,8 +52,7 @@ void RenderWorldSystem::RenderTiles()
             if (tileComponent.zOrderingType != zOrderingType)
                 continue;
 
-            const glm::vec2 posWorld =
-                coordinatesTransformer.PhysicsToWorld(physicalBody.bodyRAII->GetBody()->GetPosition());
+            const glm::vec2 posWorld = coordinatesTransformer.PhysicsToWorld(physicalBody.bodyRAII->GetBody()->GetPosition());
             const float angle = physicalBody.bodyRAII->GetBody()->GetAngle();
             primitivesRenderer.RenderTile(tileComponent, posWorld, angle);
         }
@@ -68,18 +64,15 @@ void RenderWorldSystem::RenderPlayerWeaponDirection()
     auto players = registry.view<PhysicsComponent, PlayerComponent, AnimationComponent>();
     for (auto entity : players)
     {
-        auto [physicalBody, playerInfo, animationComponent] =
-            players.get<PhysicsComponent, PlayerComponent, AnimationComponent>(entity);
+        auto [physicalBody, playerInfo, animationComponent] = players.get<PhysicsComponent, PlayerComponent, AnimationComponent>(entity);
 
         // Draw the weapon.
         // TODO1: Currently we are always get the animation in initial state. So it always draws the first frame.
         // We should use AnimationComponent to make weapon animation runnable.
-        const glm::vec2 playerPosWorld =
-            coordinatesTransformer.PhysicsToWorld(physicalBody.bodyRAII->GetBody()->GetPosition());
+        const glm::vec2 playerPosWorld = coordinatesTransformer.PhysicsToWorld(physicalBody.bodyRAII->GetBody()->GetPosition());
         float angle = utils::GetAngleFromDirection(playerInfo.weaponDirection);
         auto weaponAnimation = resourceManager.GetAnimation("scepter");
-        SDL_RendererFlip weaponFlip =
-            animationComponent.flip == SDL_FLIP_HORIZONTAL ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE;
+        SDL_RendererFlip weaponFlip = animationComponent.flip == SDL_FLIP_HORIZONTAL ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE;
         primitivesRenderer.RenderAnimationFirstFrame(weaponAnimation, playerPosWorld, angle, weaponFlip);
     }
 }
@@ -102,8 +95,7 @@ void RenderWorldSystem::RenderAnimations()
 
         if (utils::GetConfig<bool, "RenderWorldSystem.debugRenderPlayerHitbox">())
         {
-            primitivesRenderer.RenderRect(
-                physicsBodyCenterWorld, animationInfo.GetHitboxSize(), angle, ColorName::Green);
+            primitivesRenderer.RenderRect(physicsBodyCenterWorld, animationInfo.GetHitboxSize(), angle, ColorName::Green);
         }
     }
 }

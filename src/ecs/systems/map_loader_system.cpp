@@ -14,11 +14,11 @@
 #include <utils/sdl/sdl_texture_process.h>
 
 MapLoaderSystem::MapLoaderSystem(
-    EnttRegistryWrapper& registryWrapper, ResourceManager& resourceManager, Box2dEnttContactListener& contactListener,
-    GameObjectsFactory& gameObjectsFactory, BaseObjectsFactory& baseObjectsFactory)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), resourceManager(resourceManager),
-    contactListener(contactListener), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
-    gameObjectsFactory(gameObjectsFactory), baseObjectsFactory(baseObjectsFactory), coordinatesTransformer(registry)
+    EnttRegistryWrapper& registryWrapper, ResourceManager& resourceManager, Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory,
+    BaseObjectsFactory& baseObjectsFactory)
+  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), resourceManager(resourceManager), contactListener(contactListener),
+    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), gameObjectsFactory(gameObjectsFactory), baseObjectsFactory(baseObjectsFactory),
+    coordinatesTransformer(registry)
 {}
 
 void MapLoaderSystem::LoadMap(const LevelInfo& levelInfo)
@@ -58,25 +58,13 @@ void MapLoaderSystem::LoadMap(const LevelInfo& levelInfo)
         if (layer["type"] == "tilelayer")
         {
             if (layer["name"] == "background")
-                ParseTileLayer(
-                    layer,
-                    {SpawnTileOption::CollidableOption::Transparent,
-                     SpawnTileOption::DesctructibleOption::Indestructible, ZOrderingType::Background});
+                ParseTileLayer(layer, {SpawnTileOption::CollidableOption::Transparent, SpawnTileOption::DesctructibleOption::Indestructible, ZOrderingType::Background});
             if (layer["name"] == "interiors")
-                ParseTileLayer(
-                    layer,
-                    {SpawnTileOption::CollidableOption::Transparent,
-                     SpawnTileOption::DesctructibleOption::Indestructible, ZOrderingType::Interiors});
+                ParseTileLayer(layer, {SpawnTileOption::CollidableOption::Transparent, SpawnTileOption::DesctructibleOption::Indestructible, ZOrderingType::Interiors});
             if (layer["name"] == "terrain")
-                ParseTileLayer(
-                    layer,
-                    {SpawnTileOption::CollidableOption::Collidable, SpawnTileOption::DesctructibleOption::Destructible,
-                     ZOrderingType::Terrain});
+                ParseTileLayer(layer, {SpawnTileOption::CollidableOption::Collidable, SpawnTileOption::DesctructibleOption::Destructible, ZOrderingType::Terrain});
             if (layer["name"] == "terrain_no_destructible")
-                ParseTileLayer(
-                    layer,
-                    {SpawnTileOption::CollidableOption::Collidable,
-                     SpawnTileOption::DesctructibleOption::Indestructible, ZOrderingType::Terrain});
+                ParseTileLayer(layer, {SpawnTileOption::CollidableOption::Collidable, SpawnTileOption::DesctructibleOption::Indestructible, ZOrderingType::Terrain});
         }
         else if (layer["type"] == "objectgroup")
         {
@@ -155,8 +143,7 @@ void MapLoaderSystem::CalculateLevelBoundsWithBufferZone()
     MY_LOG(debug, "Level bounds: min: ({}, {}), max: ({}, {})", lb.min.x, lb.min.y, lb.max.x, lb.max.y);
     lb.min -= bz;
     lb.max += bz;
-    MY_LOG(
-        debug, "Level bounds with buffer zone: min: ({}, {}), max: ({}, {})", lb.min.x, lb.min.y, lb.max.x, lb.max.y);
+    MY_LOG(debug, "Level bounds with buffer zone: min: ({}, {}), max: ({}, {})", lb.min.x, lb.min.y, lb.max.x, lb.max.y);
 }
 
 void MapLoaderSystem::ParseTile(int tileId, int layerCol, int layerRow, SpawnTileOption tileOptions)
@@ -172,8 +159,7 @@ void MapLoaderSystem::ParseTile(int tileId, int layerCol, int layerRow, SpawnTil
     {
         for (int miniCol = 0; miniCol < colAndRowNumber; ++miniCol)
         {
-            SDL_Rect miniTextureSrcRect{
-                textureSrcRect.x + miniCol * miniWidth, textureSrcRect.y + miniRow * miniHeight, miniWidth, miniHeight};
+            SDL_Rect miniTextureSrcRect{textureSrcRect.x + miniCol * miniWidth, textureSrcRect.y + miniRow * miniHeight, miniWidth, miniHeight};
 
             // Skip invisible tiles.
             {
@@ -218,8 +204,7 @@ std::filesystem::path MapLoaderSystem::ReadPathToTileset(const nlohmann::json& m
         //          "firstgid":1,
         //          "source":"tileset.json"
         //         }]
-        std::filesystem::path tilesetJsonPath =
-            currentLevelInfo.tiledMapPath.parent_path() / mapJson["tilesets"][0]["source"].get<std::string>();
+        std::filesystem::path tilesetJsonPath = currentLevelInfo.tiledMapPath.parent_path() / mapJson["tilesets"][0]["source"].get<std::string>();
         std::ifstream tilesetFile(tilesetJsonPath);
         if (!tilesetFile.is_open())
             throw std::runtime_error("Failed to open tileset file");

@@ -2,8 +2,7 @@
 #include <utils/game_options.h>
 
 GameStateControlSystem::GameStateControlSystem(entt::registry& registry, InputEventManager& inputEventManager)
-  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
-    inputEventManager(inputEventManager)
+  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), inputEventManager(inputEventManager)
 {
     SubscribeToInputEvents();
 }
@@ -40,15 +39,10 @@ void GameStateControlSystem::HandleSpaceReleaseAfterHoldButtonToDebugInfo(const 
 
 void GameStateControlSystem::SubscribeToInputEvents()
 {
-    inputEventManager.Subscribe([this](const InputEventManager::EventInfo& eventInfo)
-                                { HandleGameStateChange(eventInfo.originalEvent); });
+    inputEventManager.Subscribe([this](const InputEventManager::EventInfo& eventInfo) { HandleGameStateChange(eventInfo.originalEvent); });
+
+    inputEventManager.Subscribe(InputEventManager::EventType::ButtonHold, [this](const InputEventManager::EventInfo& eventInfo) { HandleSpaceHoldButtonToDebugInfo(eventInfo); });
 
     inputEventManager.Subscribe(
-        InputEventManager::EventType::ButtonHold,
-        [this](const InputEventManager::EventInfo& eventInfo) { HandleSpaceHoldButtonToDebugInfo(eventInfo); });
-
-    inputEventManager.Subscribe(
-        InputEventManager::EventType::ButtonReleaseAfterHold,
-        [this](const InputEventManager::EventInfo& eventInfo)
-        { HandleSpaceReleaseAfterHoldButtonToDebugInfo(eventInfo); });
+        InputEventManager::EventType::ButtonReleaseAfterHold, [this](const InputEventManager::EventInfo& eventInfo) { HandleSpaceReleaseAfterHoldButtonToDebugInfo(eventInfo); });
 }

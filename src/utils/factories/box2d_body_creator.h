@@ -14,10 +14,7 @@ public:
     Box2dBodyCreator(entt::registry& registry);
     // entity is used to store entity in the physics body.
     // Size of object getting from options.hitbox.sizeWorld.
-    PhysicsComponent& CreatePhysicsBody(
-        entt::entity entity, const glm::vec2& posWorld, float angle, const Box2dBodyOptions& options);
+    PhysicsComponent& CreatePhysicsBody(entt::entity entity, const glm::vec2& posWorld, float angle, const Box2dBodyOptions& options);
     // Overwrite size of object in options.hitbox.sizeWorld with sizeWorld.
-    PhysicsComponent& CreatePhysicsBody(
-        entt::entity entity, const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle,
-        Box2dBodyOptions options);
+    PhysicsComponent& CreatePhysicsBody(entt::entity entity, const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, Box2dBodyOptions options);
 };

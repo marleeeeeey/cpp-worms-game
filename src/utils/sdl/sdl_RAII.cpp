@@ -35,8 +35,7 @@ SDLWindowRAII::~SDLWindowRAII()
 
 void SDLWindowRAII::init(const std::string& title, int width, int height)
 {
-    window = SDL_CreateWindow(
-        title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     if (!window)
     {
         throw std::runtime_error(MY_FMT("Failed to create SDL Window: {}", SDL_GetError()));
@@ -155,8 +154,7 @@ SDLPixelFormatRAII::~SDLPixelFormatRAII()
     }
 }
 
-SDLPixelFormatRAII::SDLPixelFormatRAII(SDLPixelFormatRAII&& other) noexcept
-  : pixelFormat(std::exchange(other.pixelFormat, nullptr))
+SDLPixelFormatRAII::SDLPixelFormatRAII(SDLPixelFormatRAII&& other) noexcept : pixelFormat(std::exchange(other.pixelFormat, nullptr))
 {}
 
 SDLPixelFormatRAII& SDLPixelFormatRAII::operator=(SDLPixelFormatRAII&& other) noexcept

@@ -20,8 +20,7 @@ enum class DrawBoudingBoxesOptions
 
 template <typename EnttViewT>
 void DrawBoudingBoxesAdvanced(
-    SdlPrimitivesRenderer& pr, CoordinatesTransformer& ct, EnttViewT view,
-    DrawBoudingBoxesOptions options = DrawBoudingBoxesOptions::DrawEverythingExceptSensors,
+    SdlPrimitivesRenderer& pr, CoordinatesTransformer& ct, EnttViewT view, DrawBoudingBoxesOptions options = DrawBoudingBoxesOptions::DrawEverythingExceptSensors,
     std::optional<ColorName> colorOpt = std::nullopt)
 {
     for (auto entity : view)
@@ -74,18 +73,13 @@ void DrawBoudingBoxesAdvanced(
 } // namespace details
 
 template <typename EnttViewT>
-void DrawBoudingBoxes(
-    SdlPrimitivesRenderer& pr, CoordinatesTransformer& ct, EnttViewT view,
-    std::optional<ColorName> colorOpt = std::nullopt)
+void DrawBoudingBoxes(SdlPrimitivesRenderer& pr, CoordinatesTransformer& ct, EnttViewT view, std::optional<ColorName> colorOpt = std::nullopt)
 {
-    details::DrawBoudingBoxesAdvanced(
-        pr, ct, view, details::DrawBoudingBoxesOptions::DrawEverythingExceptSensors, colorOpt);
+    details::DrawBoudingBoxesAdvanced(pr, ct, view, details::DrawBoudingBoxesOptions::DrawEverythingExceptSensors, colorOpt);
 }
 
 template <typename EnttViewT>
-void DrawSensorBoxes(
-    SdlPrimitivesRenderer& pr, CoordinatesTransformer& ct, EnttViewT view,
-    std::optional<ColorName> colorOpt = std::nullopt)
+void DrawSensorBoxes(SdlPrimitivesRenderer& pr, CoordinatesTransformer& ct, EnttViewT view, std::optional<ColorName> colorOpt = std::nullopt)
 {
     details::DrawBoudingBoxesAdvanced(pr, ct, view, details::DrawBoudingBoxesOptions::DrawSensors, colorOpt);
 }

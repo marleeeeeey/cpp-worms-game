@@ -41,26 +41,19 @@ public:
         SpawnPolicyBase spawnPolicy = SpawnPolicyBase::This;
     };
 public: ////////////////////////////////////////////// Main game objects. ////////////////////////////////////////
-    entt::entity SpawnTile(
-        glm::vec2 posWorld, float sizeWorld, const TextureRect& textureRect, SpawnTileOption tileOptions,
-        const std::string& name = "Tile");
+    entt::entity SpawnTile(glm::vec2 posWorld, float sizeWorld, const TextureRect& textureRect, SpawnTileOption tileOptions, const std::string& name = "Tile");
 public: ///////////////////////////////////////// Debug visual objects. //////////////////////////////////////////
     // `nameAsKey` is used as a key in entt registry to search in NameComponent.
     entt::entity SpawnDebugVisualObject(
-        const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, const std::string& nameAsKey,
-        const DebugSpawnOptions& debugSpawnOptions);
+        const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, const std::string& nameAsKey, const DebugSpawnOptions& debugSpawnOptions);
     // `nameAsKey` is used as a key in entt registry to search in NameComponent.
-    entt::entity SpawnDebugVisualObject(
-        entt::entity entity, const std::string& nameAsKey, const DebugSpawnOptions& debugSpawnOptions);
+    entt::entity SpawnDebugVisualObject(entt::entity entity, const std::string& nameAsKey, const DebugSpawnOptions& debugSpawnOptions);
 public: //////////////////////////////////////////////// Explosions. //////////////////////////////////////////////
     // Split physical entities into smaller ones. Return new entities. Used for explosion effect.
-    std::vector<entt::entity> SpawnSplittedPhysicalEnteties(
-        const std::vector<entt::entity>& entities, SDL_Point cellSizeWorld);
+    std::vector<entt::entity> SpawnSplittedPhysicalEnteties(const std::vector<entt::entity>& entities, SDL_Point cellSizeWorld);
     std::vector<entt::entity> SpawnFragmentsAfterExplosion(glm::vec2 centerWorld, float radiusWorld);
 public: /////////////////////////////////////////// Explosions. Helpers. /////////////////////////////////////////
     entt::entity SpawnFragmentAfterExplosion(const glm::vec2& posWorld);
 public: ///////////////////////////////////////////// Common. Helpers. ///////////////////////////////////////////
-    entt::entity SpawnFlyingEntity(
-        const glm::vec2& posWorld, const glm::vec2& sizeWorld, float forceDirection, float force,
-        Box2dBodyOptions::AnglePolicy anglePolicy);
+    entt::entity SpawnFlyingEntity(const glm::vec2& posWorld, const glm::vec2& sizeWorld, float forceDirection, float force, Box2dBodyOptions::AnglePolicy anglePolicy);
 };

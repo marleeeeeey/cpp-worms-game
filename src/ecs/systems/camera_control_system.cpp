@@ -7,8 +7,7 @@
 #include <utils/game_options.h>
 
 CameraControlSystem::CameraControlSystem(entt::registry& registry, InputEventManager& inputEventManager)
-  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
-    inputEventManager(inputEventManager), coordinatesTransformer(registry)
+  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), inputEventManager(inputEventManager), coordinatesTransformer(registry)
 {
     inputEventManager.Subscribe(
         [this](const InputEventManager::EventInfo& eventInfo)
@@ -37,14 +36,11 @@ void CameraControlSystem::HandleCameraMovementAndScale(const SDL_Event& event)
         int mouseX, mouseY;
         SDL_GetMouseState(&mouseX, &mouseY);
 
-        glm::vec2 mouseWorldBeforeZoom =
-            (glm::vec2(mouseX, mouseY) - gameState.windowOptions.windowSize * 0.5f) / prevScale +
-            gameState.windowOptions.cameraCenterSdl;
+        glm::vec2 mouseWorldBeforeZoom = (glm::vec2(mouseX, mouseY) - gameState.windowOptions.windowSize * 0.5f) / prevScale + gameState.windowOptions.cameraCenterSdl;
 
         // Calculate the new position of the camera so that the point under the cursor remains in the same place
-        gameState.windowOptions.cameraCenterSdl = mouseWorldBeforeZoom -
-            (glm::vec2(mouseX, mouseY) - gameState.windowOptions.windowSize * 0.5f) /
-                gameState.windowOptions.cameraScale;
+        gameState.windowOptions.cameraCenterSdl =
+            mouseWorldBeforeZoom - (glm::vec2(mouseX, mouseY) - gameState.windowOptions.windowSize * 0.5f) / gameState.windowOptions.cameraScale;
     }
     else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_MIDDLE)
     {
@@ -83,8 +79,7 @@ void CameraControlSystem::PositioningCameraToPlayer(float deltaTime)
     // Convert everything to world coordinates.
     auto mousePosWorld = coordinatesTransformer.ScreenToWorld(gameState.windowOptions.lastMousePosInWindow);
     auto& cameraCenterPosWorld = gameState.windowOptions.cameraCenterSdl;
-    glm::vec2 windowSize =
-        coordinatesTransformer.ScreenToWorld(gameState.windowOptions.windowSize, CoordinatesTransformer::Type::Length);
+    glm::vec2 windowSize = coordinatesTransformer.ScreenToWorld(gameState.windowOptions.windowSize, CoordinatesTransformer::Type::Length);
 
     auto players = registry.view<PlayerComponent, PhysicsComponent>();
     for (auto entity : players)
@@ -96,8 +91,7 @@ void CameraControlSystem::PositioningCameraToPlayer(float deltaTime)
 
         glm::vec2 cameraAnchorPosWorld = playerPosWorld;
 
-        bool mousePosImpactOnCameraAnchor =
-            utils::GetConfig<bool, "CameraControlSystem.mousePosImpactOnCameraAnchor">();
+        bool mousePosImpactOnCameraAnchor = utils::GetConfig<bool, "CameraControlSystem.mousePosImpactOnCameraAnchor">();
 
         if (mousePosImpactOnCameraAnchor)
         {
@@ -114,8 +108,7 @@ void CameraControlSystem::PositioningCameraToPlayer(float deltaTime)
         glm::vec2 windowMax = cameraCenterPosWorld + windowProportion / 2.0f;
 
         // If the player is too far from the center of the camera, move the camera.
-        if (cameraAnchorPosWorld.x < windowMin.x || cameraAnchorPosWorld.x > windowMax.x ||
-            cameraAnchorPosWorld.y < windowMin.y || cameraAnchorPosWorld.y > windowMax.y)
+        if (cameraAnchorPosWorld.x < windowMin.x || cameraAnchorPosWorld.x > windowMax.x || cameraAnchorPosWorld.y < windowMin.y || cameraAnchorPosWorld.y > windowMax.y)
         {
             // Smoothing factor (value between 0 and 1, where closer to 0 - smoother following)
             static const float smoothFactor = 0.01f;

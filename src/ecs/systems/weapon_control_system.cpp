@@ -24,12 +24,9 @@
 #include <utils/systems/box2d_entt_contact_listener.h>
 
 WeaponControlSystem::WeaponControlSystem(
-    EnttRegistryWrapper& registryWrapper, Box2dEnttContactListener& contactListener, AudioSystem& audioSystem,
-    BaseObjectsFactory& baseObjectsFactory)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()),
-    gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), contactListener(contactListener),
-    audioSystem(audioSystem), baseObjectsFactory(baseObjectsFactory), coordinatesTransformer(registry),
-    physicsBodyTuner(registry)
+    EnttRegistryWrapper& registryWrapper, Box2dEnttContactListener& contactListener, AudioSystem& audioSystem, BaseObjectsFactory& baseObjectsFactory)
+  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+    contactListener(contactListener), audioSystem(audioSystem), baseObjectsFactory(baseObjectsFactory), coordinatesTransformer(registry), physicsBodyTuner(registry)
 {
     SubscribeToContactEvents();
 }
@@ -48,8 +45,7 @@ void WeaponControlSystem::SubscribeToContactEvents()
         [this](const Box2dEnttContactListener::ContactInfo& contactInfo)
         {
             // Check if any entity is ExplostionParticlesComponent. If so, then do not trigger the explosion.
-            if (registry.any_of<ExplostionParticlesComponent>(contactInfo.entityA) ||
-                registry.any_of<ExplostionParticlesComponent>(contactInfo.entityB))
+            if (registry.any_of<ExplostionParticlesComponent>(contactInfo.entityA) || registry.any_of<ExplostionParticlesComponent>(contactInfo.entityB))
                 return;
 
             for (const auto& explosionEntity : {contactInfo.entityA, contactInfo.entityB})
@@ -142,8 +138,7 @@ void WeaponControlSystem::DoExplosion(const ExplosionEntityWithContactPoint& exp
         return;
 
     // Calculate the contact point in the physics world.
-    b2Vec2 contactPointPhysics =
-        explosionEntityWithContactPoint.contactPointPhysics.value_or(physicsInfo->bodyRAII->GetBody()->GetPosition());
+    b2Vec2 contactPointPhysics = explosionEntityWithContactPoint.contactPointPhysics.value_or(physicsInfo->bodyRAII->GetBody()->GetPosition());
     if (utils::GetConfig<bool, "WeaponControlSystem.explosionPointAlwaysAtCenterOfExplosionEntity">())
         contactPointPhysics = physicsInfo->bodyRAII->GetBody()->GetPosition();
 
@@ -152,25 +147,20 @@ void WeaponControlSystem::DoExplosion(const ExplosionEntityWithContactPoint& exp
         BaseObjectsFactory::DebugSpawnOptions options;
         options.spawnPolicy = BaseObjectsFactory::SpawnPolicyBase::This;
         auto contactPointWorld = coordinatesTransformer.PhysicsToWorld(contactPointPhysics);
-        baseObjectsFactory.SpawnDebugVisualObject(
-            contactPointWorld, {2.f, 2.f}, 0.0f, MY_FMT("ExplosionContactPoint {}", explosionEntity), options);
+        baseObjectsFactory.SpawnDebugVisualObject(contactPointWorld, {2.f, 2.f}, 0.0f, MY_FMT("ExplosionContactPoint {}", explosionEntity), options);
     }
 
     // TODO1: It is possuble to rewrite next code to use entt::view.
 
     // Get all physical bodies in the explosion radius.
-    float damageRadius =
-        damageComponent->radius * 1.5; // TODO0: hack. Need to calculate it based on the texture size.
-                                       // Because position is calculated from the center of the texture.
-    std::vector<entt::entity> allOriginalBodiesInRadius =
-        request::FindEntitiesWithAllComponentsInRadius(registry, contactPointPhysics, damageRadius);
+    float damageRadius = damageComponent->radius * 1.5; // TODO0: hack. Need to calculate it based on the texture size.
+                                                        // Because position is calculated from the center of the texture.
+    std::vector<entt::entity> allOriginalBodiesInRadius = request::FindEntitiesWithAllComponentsInRadius(registry, contactPointPhysics, damageRadius);
     MY_LOG(debug, "[DoExplosion] FindEntitiesInRadius count {}", allOriginalBodiesInRadius.size());
 
     // Get destructible objects.
-    auto destructibleOriginalBodies =
-        request::GetEntitiesWithAllComponents<DestructibleComponent>(registry, allOriginalBodiesInRadius);
-    destructibleOriginalBodies =
-        request::RemoveEntitiesWithAllComponents<ExplostionParticlesComponent>(registry, destructibleOriginalBodies);
+    auto destructibleOriginalBodies = request::GetEntitiesWithAllComponents<DestructibleComponent>(registry, allOriginalBodiesInRadius);
+    destructibleOriginalBodies = request::RemoveEntitiesWithAllComponents<ExplostionParticlesComponent>(registry, destructibleOriginalBodies);
     MY_LOG(debug, "[DoExplosion] Getting destructible objects. Count {}", destructibleOriginalBodies.size());
 
     // Split original objects to micro objects.
@@ -180,8 +170,7 @@ void WeaponControlSystem::DoExplosion(const ExplosionEntityWithContactPoint& exp
     MY_LOG(debug, "[DoExplosion] Spawn micro splittedEntities count {}", newMicroBodies.size());
 
     // Get micro objects in the explosion radius.
-    auto newMicroBodiesToDestroy =
-        request::FilterEntitiesWithAllComponentsInRadius(registry, newMicroBodies, contactPointPhysics, damageRadius);
+    auto newMicroBodiesToDestroy = request::FilterEntitiesWithAllComponentsInRadius(registry, newMicroBodies, contactPointPhysics, damageRadius);
 
     // Destroy micro objects in the explosion radius.
     MY_LOG(debug, "[DoExplosion] Destroing {} micro objects", newMicroBodiesToDestroy.size());

@@ -105,8 +105,7 @@ std::shared_ptr<SDLTextureRAII> ResourceCache::GetColoredPixelTexture(const Colo
         return coloredTextures[color];
 
     // Create texture with the specified color and cache it.
-    std::shared_ptr<SDLTextureRAII> textureRAII =
-        std::make_shared<SDLTextureRAII>(details::GetColoredPixelTexture(renderer, color));
+    std::shared_ptr<SDLTextureRAII> textureRAII = std::make_shared<SDLTextureRAII>(details::GetColoredPixelTexture(renderer, color));
     coloredTextures[color] = textureRAII;
     return textureRAII;
 }

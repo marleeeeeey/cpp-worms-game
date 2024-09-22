@@ -77,8 +77,7 @@ int main([[maybe_unused]] int argc, char* args[])
         EnttRegistryWrapper registryWrapper(registry);
 
         // Create a game state entity.
-        auto& gameOptions = registry.emplace<GameOptions>(
-            registryWrapper.Create("GameOptions"), utils::GetConfig<GameOptions, "GameOptions">());
+        auto& gameOptions = registry.emplace<GameOptions>(registryWrapper.Create("GameOptions"), utils::GetConfig<GameOptions, "GameOptions">());
 
         // Create a contact listener and subscribe it to the physics world.
         Box2dEnttContactListener contactListener(registryWrapper);
@@ -109,16 +108,14 @@ int main([[maybe_unused]] int argc, char* args[])
         EventQueueSystem eventQueueSystem(inputEventManager);
 
         // Subscribe all systems that need to handle input events.
-        PlayerControlSystem playerControlSystem(
-            registryWrapper, inputEventManager, contactListener, gameObjectsFactory, audioSystem);
+        PlayerControlSystem playerControlSystem(registryWrapper, inputEventManager, contactListener, gameObjectsFactory, audioSystem);
         CameraControlSystem cameraControlSystem(registryWrapper.GetRegistry(), inputEventManager);
         GameStateControlSystem gameStateControlSystem(registryWrapper.GetRegistry(), inputEventManager);
 
         // Create a systems with no input events.
         SdlPrimitivesRenderer primitivesRenderer(registryWrapper.GetRegistry(), renderer.get());
         PhysicsSystem physicsSystem(registryWrapper);
-        RenderWorldSystem RenderWorldSystem(
-            registryWrapper.GetRegistry(), renderer.get(), resourceManager, primitivesRenderer);
+        RenderWorldSystem RenderWorldSystem(registryWrapper.GetRegistry(), renderer.get(), resourceManager, primitivesRenderer);
         RenderHUDSystem RenderHUDSystem(registryWrapper.GetRegistry(), renderer.get(), assetsSettingsJson);
 
         // Auxiliary systems.
@@ -126,15 +123,13 @@ int main([[maybe_unused]] int argc, char* args[])
         TimersControlSystem timersControlSystem(registryWrapper.GetRegistry());
 
         // Load the map.
-        MapLoaderSystem mapLoaderSystem(
-            registryWrapper, resourceManager, contactListener, gameObjectsFactory, baseObjectsFactory);
+        MapLoaderSystem mapLoaderSystem(registryWrapper, resourceManager, contactListener, gameObjectsFactory, baseObjectsFactory);
 
         CoordinatesTransformer coordinatesTransformer(registryWrapper.GetRegistry());
 
         AnimationUpdateSystem animationUpdateSystem(registryWrapper.GetRegistry(), resourceManager);
         PortalsGameLogicSystem portalsGameLogicSystem(registryWrapper.GetRegistry(), gameObjectsFactory, audioSystem);
-        TurretGameLogicSystem turretGameLogicSystem(
-            registryWrapper.GetRegistry(), gameObjectsFactory, coordinatesTransformer);
+        TurretGameLogicSystem turretGameLogicSystem(registryWrapper.GetRegistry(), gameObjectsFactory, coordinatesTransformer);
 
         EventsControlSystem eventsControlSystem(registryWrapper.GetRegistry());
 

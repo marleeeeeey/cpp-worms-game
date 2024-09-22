@@ -15,8 +15,7 @@
 #include <utils/resources/resource_cache.h>
 #include <utils/sdl/sdl_texture_process.h>
 
-ResourceManager::ResourceManager(SDL_Renderer* renderer, const nlohmann::json& assetsSettingsJson)
-  : resourceCashe(renderer)
+ResourceManager::ResourceManager(SDL_Renderer* renderer, const nlohmann::json& assetsSettingsJson) : resourceCashe(renderer)
 {
     // Load animations.
     for (const auto& animationPair : assetsSettingsJson["animations"].items())
@@ -84,8 +83,8 @@ ResourceManager::ResourceManager(SDL_Renderer* renderer, const nlohmann::json& a
     }
 
     MY_LOG(
-        info, "Game found {} animation(s), {} level(s), {} music(s), {} sound effect(s).", animations.size(),
-        tiledLevels.size(), musicPaths.size(), soundEffectBatchesPerTag.size());
+        info, "Game found {} animation(s), {} level(s), {} music(s), {} sound effect(s).", animations.size(), tiledLevels.size(), musicPaths.size(),
+        soundEffectBatchesPerTag.size());
 }
 
 Animation ResourceManager::GetAnimation(const std::string& animationName)
@@ -122,8 +121,7 @@ Animation ResourceManager::GetAnimationExactMatch(const std::string& animationNa
     return animations[animationName][tagName];
 }
 
-Animation ResourceManager::GetAnimationByRegexRandomly(
-    const std::string& animationName, const std::string& regexTagName)
+Animation ResourceManager::GetAnimationByRegexRandomly(const std::string& animationName, const std::string& regexTagName)
 {
     if (!animations.contains(animationName))
         throw std::runtime_error(MY_FMT("Animation with name '{}' does not found", animationName));
@@ -136,8 +134,7 @@ Animation ResourceManager::GetAnimationByRegexRandomly(
     }
 
     if (foundTags.empty())
-        throw std::runtime_error(
-            MY_FMT("Animation tag with regex '{}' does not found in {}", regexTagName, animationName));
+        throw std::runtime_error(MY_FMT("Animation tag with regex '{}' does not found in {}", regexTagName, animationName));
 
     auto randomTagOpt = utils::RandomIndexOpt(foundTags);
     return animations[animationName][foundTags[randomTagOpt.value()]];
@@ -146,8 +143,7 @@ Animation ResourceManager::GetAnimationByRegexRandomly(
 namespace
 {
 
-AnimationFrame GetAnimationFrameFromAsepriteFrame(
-    const AsepriteData::Frame& asepriteFrame, std::shared_ptr<SDLTextureRAII> textureRAII)
+AnimationFrame GetAnimationFrameFromAsepriteFrame(const AsepriteData::Frame& asepriteFrame, std::shared_ptr<SDLTextureRAII> textureRAII)
 {
     AnimationFrame animationFrame;
     animationFrame.tileComponent.texturePtr = textureRAII;
@@ -159,8 +155,7 @@ AnimationFrame GetAnimationFrameFromAsepriteFrame(
 
 } // namespace
 
-ResourceManager::TagToAnimationDict ResourceManager::ReadAsepriteAnimation(
-    const std::filesystem::path& asepriteAnimationJsonPath)
+ResourceManager::TagToAnimationDict ResourceManager::ReadAsepriteAnimation(const std::filesystem::path& asepriteAnimationJsonPath)
 {
     auto asepriteJsonData = utils::LoadJsonFromFile(asepriteAnimationJsonPath);
 
@@ -171,8 +166,7 @@ ResourceManager::TagToAnimationDict ResourceManager::ReadAsepriteAnimation(
     }
     catch (const std::exception& e)
     {
-        throw std::runtime_error(MY_FMT(
-            "[ReadAsepriteAnimation] Failed to load Aseprite data from '{}': {}", asepriteAnimationJsonPath, e.what()));
+        throw std::runtime_error(MY_FMT("[ReadAsepriteAnimation] Failed to load Aseprite data from '{}': {}", asepriteAnimationJsonPath, e.what()));
     }
 
     // Load texture.
@@ -190,9 +184,7 @@ ResourceManager::TagToAnimationDict ResourceManager::ReadAsepriteAnimation(
         {
             const SDL_Rect& rectInSurface = asepriteData.frames[asepriteData.frameTags["Hitbox"].from].rectInTexture;
             hitboxRect = GetVisibleRectInSrcRectCoordinates(surfaceRAII->get(), rectInSurface);
-            MY_LOG(
-                debug, "Hitbox rect found: x={}, y={}, w={}, h={}", hitboxRect->x, hitboxRect->y, hitboxRect->w,
-                hitboxRect->h);
+            MY_LOG(debug, "Hitbox rect found: x={}, y={}, w={}, h={}", hitboxRect->x, hitboxRect->y, hitboxRect->w, hitboxRect->h);
         }
 
         for (const auto& [_, frameTag] : asepriteData.frameTags)
@@ -207,8 +199,7 @@ ResourceManager::TagToAnimationDict ResourceManager::ReadAsepriteAnimation(
                 AnimationFrame animationFrame = GetAnimationFrameFromAsepriteFrame(asepriteData.frames[i], textureRAII);
 
                 MY_LOG(
-                    debug, "Frame {} has texture rect: x={}, y={}, w={}, h={}", i,
-                    animationFrame.tileComponent.textureRect.x, animationFrame.tileComponent.textureRect.y,
+                    debug, "Frame {} has texture rect: x={}, y={}, w={}, h={}", i, animationFrame.tileComponent.textureRect.x, animationFrame.tileComponent.textureRect.y,
                     animationFrame.tileComponent.textureRect.w, animationFrame.tileComponent.textureRect.h);
 
                 animation.frames.push_back(std::move(animationFrame));
@@ -229,14 +220,10 @@ ResourceManager::TagToAnimationDict ResourceManager::ReadAsepriteAnimation(
     }
 
     // Log names of loaded animations and tags.
-    MY_LOG(
-        debug, "Loaded animation from '{}': {}", asepriteAnimationJsonPath.string(),
-        utils::JoinStrings(utils::GetKeys(tagToAnimationDict), ", "));
+    MY_LOG(debug, "Loaded animation from '{}': {}", asepriteAnimationJsonPath.string(), utils::JoinStrings(utils::GetKeys(tagToAnimationDict), ", "));
     for (const auto& [tag, animation] : tagToAnimationDict)
     {
-        MY_LOG(
-            debug, "  Tag '{}' has {} frame(s), hitbox rect found: {}", tag, animation.frames.size(),
-            animation.hitboxRect.has_value());
+        MY_LOG(debug, "  Tag '{}' has {} frame(s), hitbox rect found: {}", tag, animation.frames.size(), animation.hitboxRect.has_value());
     }
 
     return tagToAnimationDict;

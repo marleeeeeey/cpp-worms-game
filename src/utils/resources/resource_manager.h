@@ -60,8 +60,7 @@ public: // //////////////////////////////////////// Animations /////////////////
     };
     // Get animation by name without tag. Load the first tag found.
     Animation GetAnimation(const std::string& animationName);
-    Animation GetAnimation(
-        const std::string& animationName, const std::string& tagName, TagProps tagProps = TagProps::ExactMatch);
+    Animation GetAnimation(const std::string& animationName, const std::string& tagName, TagProps tagProps = TagProps::ExactMatch);
 private:
     Animation GetAnimationExactMatch(const std::string& animationName, const std::string& tagName);
     Animation GetAnimationByRegexRandomly(const std::string& animationName, const std::string& regexTagName);

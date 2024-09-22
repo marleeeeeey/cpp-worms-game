@@ -7,12 +7,10 @@
 #include <vector>
 
 SdlPrimitivesRenderer::SdlPrimitivesRenderer(entt::registry& registry, SDL_Renderer* renderer)
-  : renderer(renderer), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
-    coordinatesTransformer(registry)
+  : renderer(renderer), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), coordinatesTransformer(registry)
 {}
 
-void SdlPrimitivesRenderer::RenderRect(
-    const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, ColorName color)
+void SdlPrimitivesRenderer::RenderRect(const glm::vec2& posWorld, const glm::vec2& sizeWorld, float angle, ColorName color)
 {
     auto sdlColor = GetSDLColor(color);
     auto centerPosScreen = coordinatesTransformer.WorldToScreen(posWorld);
@@ -41,8 +39,7 @@ void SdlPrimitivesRenderer::RenderCircle(const glm::vec2& centerWorld, float rad
     DrawCircle(renderer, centerScreen, radiusScreen, sdlColor);
 }
 
-void SdlPrimitivesRenderer::RenderTile(
-    const TileComponent& tileInfo, const glm::vec2& centerWorld, const float angle, const SDL_RendererFlip& flip)
+void SdlPrimitivesRenderer::RenderTile(const TileComponent& tileInfo, const glm::vec2& centerWorld, const float angle, const SDL_RendererFlip& flip)
 {
     auto sizeWorld = tileInfo.sizeWorld;
     SDL_Rect destRect = GetRectWithCameraTransform(centerWorld, sizeWorld);
@@ -58,12 +55,10 @@ void SdlPrimitivesRenderer::RenderTile(
     double angleDegrees = angle * 180.0 / std::numbers::pi;
 
     // Render the tile with the calculated angle.
-    SDL_RenderCopyEx(
-        renderer, tileInfo.texturePtr->get(), &tileInfo.textureRect, &destRect, angleDegrees, &center, flip);
+    SDL_RenderCopyEx(renderer, tileInfo.texturePtr->get(), &tileInfo.textureRect, &destRect, angleDegrees, &center, flip);
 }
 
-void SdlPrimitivesRenderer::RenderAnimationComponent(
-    const AnimationComponent& animationInfo, glm::vec2 centerWorld, float angle)
+void SdlPrimitivesRenderer::RenderAnimationComponent(const AnimationComponent& animationInfo, glm::vec2 centerWorld, float angle)
 {
     if (animationInfo.animation.frames.empty())
         return;
@@ -75,8 +70,8 @@ void SdlPrimitivesRenderer::RenderAnimationComponent(
     const auto& frame = animation.frames[safeIndex];
 
     MY_LOG(
-        trace, "safeIndex: {}, textureRect: x: {}, y: {}, w: {}, h: {}", safeIndex, frame.tileComponent.textureRect.x,
-        frame.tileComponent.textureRect.y, frame.tileComponent.textureRect.w, frame.tileComponent.textureRect.h);
+        trace, "safeIndex: {}, textureRect: x: {}, y: {}, w: {}, h: {}", safeIndex, frame.tileComponent.textureRect.x, frame.tileComponent.textureRect.y,
+        frame.tileComponent.textureRect.w, frame.tileComponent.textureRect.h);
 
     if (animation.hitboxRect)
     {
@@ -94,8 +89,7 @@ void SdlPrimitivesRenderer::RenderAnimationComponent(
     RenderTile(frame.tileComponent, centerWorld, angle, animationInfo.flip);
 }
 
-void SdlPrimitivesRenderer::RenderAnimationFirstFrame(
-    const Animation& animation, glm::vec2 centerWorld, float angle, const SDL_RendererFlip& flip)
+void SdlPrimitivesRenderer::RenderAnimationFirstFrame(const Animation& animation, glm::vec2 centerWorld, float angle, const SDL_RendererFlip& flip)
 {
     if (animation.frames.empty())
         return;
@@ -103,8 +97,8 @@ void SdlPrimitivesRenderer::RenderAnimationFirstFrame(
     const auto& frame = animation.frames[0];
 
     MY_LOG(
-        trace, "textureRect: x: {}, y: {}, w: {}, h: {}", frame.tileComponent.textureRect.x,
-        frame.tileComponent.textureRect.y, frame.tileComponent.textureRect.w, frame.tileComponent.textureRect.h);
+        trace, "textureRect: x: {}, y: {}, w: {}, h: {}", frame.tileComponent.textureRect.x, frame.tileComponent.textureRect.y, frame.tileComponent.textureRect.w,
+        frame.tileComponent.textureRect.h);
 
     RenderTile(frame.tileComponent, centerWorld, angle, flip);
 }
@@ -153,8 +147,7 @@ SDL_Rect SdlPrimitivesRenderer::GetRectWithCameraTransform(const glm::vec2& posW
 
     // Have to render from the center of the object. Because the Box2D body is in the center of the object.
     SDL_Rect rect = {
-        static_cast<int>(transformedPosition.x - sizeWorld.x * rOpt.cameraScale / 2),
-        static_cast<int>(transformedPosition.y - sizeWorld.y * rOpt.cameraScale / 2),
+        static_cast<int>(transformedPosition.x - sizeWorld.x * rOpt.cameraScale / 2), static_cast<int>(transformedPosition.y - sizeWorld.y * rOpt.cameraScale / 2),
         static_cast<int>(sizeWorld.x * rOpt.cameraScale), static_cast<int>(sizeWorld.y * rOpt.cameraScale)};
 
     return rect;

@@ -1,8 +1,7 @@
 #include "box2d_entt_contact_listener.h"
 #include <utils/logger.h>
 
-Box2dEnttContactListener::Box2dEnttContactListener(EnttRegistryWrapper& registryWrapper)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry())
+Box2dEnttContactListener::Box2dEnttContactListener(EnttRegistryWrapper& registryWrapper) : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry())
 {}
 
 void Box2dEnttContactListener::BeginContact(b2Contact* contact)
@@ -53,8 +52,8 @@ void Box2dEnttContactListener::EndContact(b2Contact* contact)
     }
 }
 
-std::optional<std::pair<Box2dEnttContactListener::EntityWithProperties, Box2dEnttContactListener::EntityWithProperties>>
-Box2dEnttContactListener::GetValidEntities(b2Contact* contact)
+std::optional<std::pair<Box2dEnttContactListener::EntityWithProperties, Box2dEnttContactListener::EntityWithProperties>> Box2dEnttContactListener::GetValidEntities(
+    b2Contact* contact)
 {
     b2Body* bodyA = contact->GetFixtureA()->GetBody();
     b2Body* bodyB = contact->GetFixtureB()->GetBody();

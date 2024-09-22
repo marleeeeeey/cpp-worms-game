@@ -5,12 +5,10 @@
 #include <utils/vec_operators.h>
 
 Box2dUtils::Box2dUtils(entt::registry& registry)
-  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
-    box2dBodyCreator(registry), coordinatesTransformer(registry)
+  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), box2dBodyCreator(registry), coordinatesTransformer(registry)
 {}
 
-void Box2dUtils::ApplyForceToPhysicalBodies(
-    std::vector<entt::entity> physicalEntities, const glm::vec2& forceCenterWorld, float force)
+void Box2dUtils::ApplyForceToPhysicalBodies(std::vector<entt::entity> physicalEntities, const glm::vec2& forceCenterWorld, float force)
 {
     auto forceCenterPhysics = coordinatesTransformer.WorldToPhysics(forceCenterWorld);
 

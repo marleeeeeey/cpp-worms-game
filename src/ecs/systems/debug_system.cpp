@@ -3,8 +3,7 @@
 #include <my_cpp_utils/logger.h>
 #include <utils/factories/game_objects_factory.h>
 
-DebugSystem::DebugSystem(entt::registry& registry, BaseObjectsFactory& baseObjectsFactory)
-  : registry(registry), baseObjectsFactory(baseObjectsFactory)
+DebugSystem::DebugSystem(entt::registry& registry, BaseObjectsFactory& baseObjectsFactory) : registry(registry), baseObjectsFactory(baseObjectsFactory)
 {}
 
 void DebugSystem::Update()

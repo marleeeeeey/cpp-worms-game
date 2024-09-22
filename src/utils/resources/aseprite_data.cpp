@@ -45,9 +45,7 @@ AsepriteData LoadAsepriteData(const nlohmann::json& asepriteJsonData)
     }
 
     // Sort frames by originalIndex.
-    std::sort(
-        asepriteData.frames.begin(), asepriteData.frames.end(),
-        [](const auto& a, const auto& b) { return a.originalIndex < b.originalIndex; });
+    std::sort(asepriteData.frames.begin(), asepriteData.frames.end(), [](const auto& a, const auto& b) { return a.originalIndex < b.originalIndex; });
 
     // Load texture path.
     asepriteData.texturePath = asepriteJsonData["meta"]["image"];

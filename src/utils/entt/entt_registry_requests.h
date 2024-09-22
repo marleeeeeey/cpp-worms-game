@@ -9,9 +9,7 @@ namespace request
 {
 
 template <typename... ComponentTypes>
-std::optional<entt::entity> FindClosestEntityWithAllComponents(
-    entt::registry& registry, const b2Vec2& anchorPosWorld,
-    std::function<bool(entt::entity)> optTruePredicate = nullptr)
+std::optional<entt::entity> FindClosestEntityWithAllComponents(entt::registry& registry, const b2Vec2& anchorPosWorld, std::function<bool(entt::entity)> optTruePredicate = nullptr)
 {
     auto targetEntities = registry.view<PhysicsComponent, ComponentTypes...>();
     float minDistance = std::numeric_limits<float>::max();
@@ -46,8 +44,7 @@ std::optional<b2Vec2> FindClosestEntityPosWithAllComponents(entt::registry& regi
 }
 
 template <typename... ComponentTypes>
-std::vector<entt::entity> FindEntitiesWithAllComponentsInRadius(
-    entt::registry& registry, const b2Vec2& centerPosPhysics, float radiusPhysics)
+std::vector<entt::entity> FindEntitiesWithAllComponentsInRadius(entt::registry& registry, const b2Vec2& centerPosPhysics, float radiusPhysics)
 {
     std::vector<entt::entity> entitiesInRadius;
     auto view = registry.view<PhysicsComponent, ComponentTypes...>();
@@ -67,8 +64,7 @@ std::vector<entt::entity> FindEntitiesWithAllComponentsInRadius(
 
 template <typename... ComponentTypes>
 std::vector<entt::entity> FilterEntitiesWithAllComponentsInRadius(
-    entt::registry& registry, const std::vector<entt::entity>& entities, const b2Vec2& centerPosPhysics,
-    float radiusPhysics)
+    entt::registry& registry, const std::vector<entt::entity>& entities, const b2Vec2& centerPosPhysics, float radiusPhysics)
 {
     std::vector<entt::entity> entitiesInRadius;
     for (auto entity : entities)
@@ -86,8 +82,7 @@ std::vector<entt::entity> FilterEntitiesWithAllComponentsInRadius(
 }
 
 template <typename... ComponentTypes>
-std::vector<entt::entity> RemoveEntitiesWithAllComponents(
-    entt::registry& registry, const std::vector<entt::entity>& entities)
+std::vector<entt::entity> RemoveEntitiesWithAllComponents(entt::registry& registry, const std::vector<entt::entity>& entities)
 {
     std::vector<entt::entity> result;
     for (auto& entity : entities)
@@ -99,8 +94,7 @@ std::vector<entt::entity> RemoveEntitiesWithAllComponents(
 }
 
 template <typename... ComponentTypes>
-std::vector<entt::entity> GetEntitiesWithAllComponents(
-    entt::registry& registry, const std::vector<entt::entity>& entities)
+std::vector<entt::entity> GetEntitiesWithAllComponents(entt::registry& registry, const std::vector<entt::entity>& entities)
 {
     std::vector<entt::entity> result;
     for (auto& entity : entities)

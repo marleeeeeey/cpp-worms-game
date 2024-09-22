@@ -9,8 +9,6 @@ class TurretGameLogicSystem
     GameObjectsFactory& gameObjectsFactory;
     CoordinatesTransformer& coordinatesTransformer;
 public:
-    TurretGameLogicSystem(
-        entt::registry& registry, GameObjectsFactory& gameObjectsFactory,
-        CoordinatesTransformer& coordinatesTransformer);
+    TurretGameLogicSystem(entt::registry& registry, GameObjectsFactory& gameObjectsFactory, CoordinatesTransformer& coordinatesTransformer);
     void Update();
 };

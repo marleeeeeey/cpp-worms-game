@@ -29,9 +29,7 @@ private: /////////////// Queues for entities that should be processed when Box2D
     std::map<entt::entity, ExplosionEntityWithContactPoint> explosionEntitiesQueue;
     std::set<entt::entity> becomeStaticEntitiesQueue;
 public:
-    WeaponControlSystem(
-        EnttRegistryWrapper& registryWrapper, Box2dEnttContactListener& contactListener, AudioSystem& audioSystem,
-        BaseObjectsFactory& baseObjectsFactory);
+    WeaponControlSystem(EnttRegistryWrapper& registryWrapper, Box2dEnttContactListener& contactListener, AudioSystem& audioSystem, BaseObjectsFactory& baseObjectsFactory);
     void Update(float deltaTime);
 private:
     void SubscribeToContactEvents();

@@ -38,6 +38,5 @@ Box2dObjectRAII& Box2dObjectRAII::operator=(Box2dObjectRAII&& other) noexcept
     return *this;
 }
 
-Box2dObjectRAII::Box2dObjectRAII(Box2dObjectRAII&& other) noexcept
-  : body(std::exchange(other.body, nullptr)), world(std::exchange(other.world, nullptr))
+Box2dObjectRAII::Box2dObjectRAII(Box2dObjectRAII&& other) noexcept : body(std::exchange(other.body, nullptr)), world(std::exchange(other.world, nullptr))
 {}

@@ -24,8 +24,8 @@ class PlayerControlSystem
     std::unordered_map<InputEventManager::EventType, std::queue<InputEventManager::EventInfo>> eventsQueueByType;
 public:
     PlayerControlSystem(
-        EnttRegistryWrapper& registryWrapper, InputEventManager& inputEventManager,
-        Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory, AudioSystem& audioSystem);
+        EnttRegistryWrapper& registryWrapper, InputEventManager& inputEventManager, Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory,
+        AudioSystem& audioSystem);
 public: ///////////////////////////////////////////////// Update. ///////////////////////////////////////////////
     void Update(float deltaTime);
     void ProcessEventsQueue(float deltaTime);

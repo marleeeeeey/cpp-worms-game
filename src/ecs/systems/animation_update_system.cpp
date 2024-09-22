@@ -4,8 +4,7 @@
 #include <ecs/components/player_components.h>
 
 AnimationUpdateSystem::AnimationUpdateSystem(entt::registry& registry, ResourceManager& resourceManager)
-  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
-    resourceManager(resourceManager), box2dBodyTuner(registry)
+  : registry(registry), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), resourceManager(resourceManager), box2dBodyTuner(registry)
 {}
 
 void AnimationUpdateSystem::Update(float deltaTime)
@@ -32,8 +31,7 @@ void AnimationUpdateSystem::UpdateAnimationProgressForAllEntities(float deltaTim
             if (animationInfo.currentFrameTime >= animationInfo.animation.frames[safeIndex].duration)
             {
                 animationInfo.currentFrameTime -= animationInfo.animation.frames[safeIndex].duration;
-                animationInfo.currentFrameIndex =
-                    (animationInfo.currentFrameIndex + 1) % animationInfo.animation.frames.size();
+                animationInfo.currentFrameIndex = (animationInfo.currentFrameIndex + 1) % animationInfo.animation.frames.size();
 
                 // Stop the animation if it's not looped and the last frame is reached.
                 if (!animationInfo.loop && animationInfo.currentFrameIndex == 0)
@@ -51,8 +49,7 @@ void AnimationUpdateSystem::UpdatePlayerAnimationDirectionAndSpeed()
 
     for (auto entity : view)
     {
-        const auto& [animationInfo, playerInfo, physicsInfo] =
-            view.get<AnimationComponent, PlayerComponent, PhysicsComponent>(entity);
+        const auto& [animationInfo, playerInfo, physicsInfo] = view.get<AnimationComponent, PlayerComponent, PhysicsComponent>(entity);
 
         // Change the animation speed based on the player's speed.
         auto body = physicsInfo.bodyRAII->GetBody();
