@@ -10,7 +10,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Generate compile_commands.json.
 find_package(box2d CONFIG REQUIRED)
 find_package(EnTT CONFIG REQUIRED)
 
-# find_package(GameNetworkingSockets CONFIG REQUIRED) # TODO2. Add as submodule.
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_image CONFIG REQUIRED)
 find_package(SDL2_mixer CONFIG REQUIRED)

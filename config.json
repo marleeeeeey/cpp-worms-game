@@ -10,9 +10,6 @@
       "cameraScale": 2
     }
   },
-  "Networking": {
-    "debugSeverity": "k_ESteamNetworkingSocketsDebugOutputType_Everything"
-  },
   "WeaponControlSystem": {
     "cellSizeForMicroDistruction": 2,
     "createSyntheticExplosionFragments": false,

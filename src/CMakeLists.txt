@@ -24,8 +24,6 @@ endif()
 target_compile_definitions(wofares_game_engine
     PRIVATE
 
-    DisableSteamNetworkingSockets # TODO2: Temporary disable SteamNetworkingSockets for wofares_game_engine.
-
     # MY_DEBUG # TODO5: Uncomment this to enable extra debug mode.
 )
 
@@ -53,7 +51,6 @@ target_link_libraries(wofares_game_engine
     box2d::box2d
     EnTT::EnTT
 
-    # GameNetworkingSockets::static # TODO2: Add as submodule.
     $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main> $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
     $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>
     $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>

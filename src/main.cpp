@@ -22,8 +22,6 @@
 #include <utils/factories/game_objects_factory.h>
 #include <utils/file_system.h>
 #include <utils/logger.h>
-
-// #include <utils/network/steam_networking_init_RAII.h>
 #include <utils/resources/resource_manager.h>
 #include <utils/sdl/sdl_RAII.h>
 #include <utils/sdl/sdl_imgui_RAII.h>
@@ -73,18 +71,6 @@ int main([[maybe_unused]] int argc, char* args[])
         MY_LOG(info, "*********************************************");
         MY_LOG(info, "Current directory set to: {}", execDir);
         MY_LOG(info, "Config file loaded: {}", configFilePath.string());
-
-        // #ifndef DisableSteamNetworkingSockets
-        //         // Initialize the SteamNetworkingSockets library.
-        //         SteamNetworkingInitRAII::Options steamNetworkingOptions;
-        //         steamNetworkingOptions.debugSeverity =
-        //             utils::GetConfig<ESteamNetworkingSocketsDebugOutputType, "Networking.debugSeverity">();
-        //         MY_LOG(info, "[SteamNetworking] debugSeverity: {}", steamNetworkingOptions.debugSeverity);
-        //         SteamNetworkingInitRAII steamNetworkingInitRAII(steamNetworkingOptions);
-        //         SteamNetworkingInitRAII::SetDebugCallback(
-        //             []([[maybe_unused]] ESteamNetworkingSocketsDebugOutputType eType, const char* pszMsg)
-        //             { MY_LOG(info, "[SteamNetworking] {}", pszMsg); });
-        // #endif // DisableSteamNetworkingSockets
 
         // Create an EnTT registry.
         entt::registry registry;
