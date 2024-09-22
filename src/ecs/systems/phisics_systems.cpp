@@ -10,7 +10,7 @@
 #include <utils/math_utils.h>
 
 PhysicsSystem::PhysicsSystem(EnttRegistryWrapper& registryWrapper)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+  : registryWrapper(registryWrapper), registry(registryWrapper), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
     coordinatesTransformer(registry)
 {}
 

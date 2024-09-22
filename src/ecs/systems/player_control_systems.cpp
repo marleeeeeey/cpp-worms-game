@@ -20,7 +20,7 @@
 PlayerControlSystem::PlayerControlSystem(
     EnttRegistryWrapper& registryWrapper, InputEventManager& inputEventManager, Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory,
     AudioSystem& audioSystem)
-  : registry(registryWrapper.GetRegistry()), inputEventManager(inputEventManager), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+  : registry(registryWrapper), inputEventManager(inputEventManager), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
     coordinatesTransformer(registry), box2dBodyCreator(registry), contactListener(contactListener), gameObjectsFactory(gameObjectsFactory), audioSystem(audioSystem)
 {
     SubscribeToInputEvents();

@@ -109,31 +109,31 @@ int main([[maybe_unused]] int argc, char* args[])
 
         // Subscribe all systems that need to handle input events.
         PlayerControlSystem playerControlSystem(registryWrapper, inputEventManager, contactListener, gameObjectsFactory, audioSystem);
-        CameraControlSystem cameraControlSystem(registryWrapper.GetRegistry(), inputEventManager);
-        GameStateControlSystem gameStateControlSystem(registryWrapper.GetRegistry(), inputEventManager);
+        CameraControlSystem cameraControlSystem(registryWrapper, inputEventManager);
+        GameStateControlSystem gameStateControlSystem(registryWrapper, inputEventManager);
 
         // Create a systems with no input events.
-        SdlPrimitivesRenderer primitivesRenderer(registryWrapper.GetRegistry(), renderer.get());
+        SdlPrimitivesRenderer primitivesRenderer(registryWrapper, renderer.get());
         PhysicsSystem physicsSystem(registryWrapper);
-        RenderWorldSystem RenderWorldSystem(registryWrapper.GetRegistry(), renderer.get(), resourceManager, primitivesRenderer);
-        RenderHUDSystem RenderHUDSystem(registryWrapper.GetRegistry(), renderer.get(), assetsSettingsJson);
+        RenderWorldSystem RenderWorldSystem(registryWrapper, renderer.get(), resourceManager, primitivesRenderer);
+        RenderHUDSystem RenderHUDSystem(registryWrapper, renderer.get(), assetsSettingsJson);
 
         // Auxiliary systems.
         ScreenModeControlSystem screenModeControlSystem(inputEventManager, window);
-        TimersControlSystem timersControlSystem(registryWrapper.GetRegistry());
+        TimersControlSystem timersControlSystem(registryWrapper);
 
         // Load the map.
         MapLoaderSystem mapLoaderSystem(registryWrapper, resourceManager, contactListener, gameObjectsFactory, baseObjectsFactory);
 
-        CoordinatesTransformer coordinatesTransformer(registryWrapper.GetRegistry());
+        CoordinatesTransformer coordinatesTransformer(registryWrapper);
 
-        AnimationUpdateSystem animationUpdateSystem(registryWrapper.GetRegistry(), resourceManager);
-        PortalsGameLogicSystem portalsGameLogicSystem(registryWrapper.GetRegistry(), gameObjectsFactory, audioSystem);
-        TurretGameLogicSystem turretGameLogicSystem(registryWrapper.GetRegistry(), gameObjectsFactory, coordinatesTransformer);
+        AnimationUpdateSystem animationUpdateSystem(registryWrapper, resourceManager);
+        PortalsGameLogicSystem portalsGameLogicSystem(registryWrapper, gameObjectsFactory, audioSystem);
+        TurretGameLogicSystem turretGameLogicSystem(registryWrapper, gameObjectsFactory, coordinatesTransformer);
 
-        EventsControlSystem eventsControlSystem(registryWrapper.GetRegistry());
+        EventsControlSystem eventsControlSystem(registryWrapper);
 
-        DebugSystem debugSystem(registryWrapper.GetRegistry(), baseObjectsFactory);
+        DebugSystem debugSystem(registryWrapper, baseObjectsFactory);
 
         // Set the main loop lambda.
         Uint32 lastTick = SDL_GetTicks();

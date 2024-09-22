@@ -30,11 +30,6 @@ void EnttRegistryWrapper::Destroy(entt::entity entity)
         registry.destroy(entity);
 }
 
-entt::registry& EnttRegistryWrapper::GetRegistry()
-{
-    return registry;
-}
-
 void EnttRegistryWrapper::LogAllEntitiesByTheirNames()
 {
 #ifdef MY_DEBUG

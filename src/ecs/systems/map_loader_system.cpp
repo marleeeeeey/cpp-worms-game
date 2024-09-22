@@ -16,7 +16,7 @@
 MapLoaderSystem::MapLoaderSystem(
     EnttRegistryWrapper& registryWrapper, ResourceManager& resourceManager, Box2dEnttContactListener& contactListener, GameObjectsFactory& gameObjectsFactory,
     BaseObjectsFactory& baseObjectsFactory)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), resourceManager(resourceManager), contactListener(contactListener),
+  : registryWrapper(registryWrapper), registry(registryWrapper), resourceManager(resourceManager), contactListener(contactListener),
     gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())), gameObjectsFactory(gameObjectsFactory), baseObjectsFactory(baseObjectsFactory),
     coordinatesTransformer(registry)
 {}

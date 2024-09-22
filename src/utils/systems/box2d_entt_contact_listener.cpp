@@ -1,7 +1,7 @@
 #include "box2d_entt_contact_listener.h"
 #include <utils/logger.h>
 
-Box2dEnttContactListener::Box2dEnttContactListener(EnttRegistryWrapper& registryWrapper) : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry())
+Box2dEnttContactListener::Box2dEnttContactListener(EnttRegistryWrapper& registryWrapper) : registryWrapper(registryWrapper), registry(registryWrapper)
 {}
 
 void Box2dEnttContactListener::BeginContact(b2Contact* contact)

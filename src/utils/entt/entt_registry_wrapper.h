@@ -16,5 +16,5 @@ public: /////////////// Methods for debug - use in client code. /////////////
     void LogAllEntitiesByTheirNames();
     std::string TryGetName(entt::entity entity);
     // Get original registry.
-    entt::registry& GetRegistry();
+    operator entt::registry&() { return registry; }
 };

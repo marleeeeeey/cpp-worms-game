@@ -25,7 +25,7 @@
 
 WeaponControlSystem::WeaponControlSystem(
     EnttRegistryWrapper& registryWrapper, Box2dEnttContactListener& contactListener, AudioSystem& audioSystem, BaseObjectsFactory& baseObjectsFactory)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+  : registryWrapper(registryWrapper), registry(registryWrapper), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
     contactListener(contactListener), audioSystem(audioSystem), baseObjectsFactory(baseObjectsFactory), coordinatesTransformer(registry), physicsBodyTuner(registry)
 {
     SubscribeToContactEvents();

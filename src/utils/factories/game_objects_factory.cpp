@@ -26,7 +26,7 @@
 #include <utils/time_utils.h>
 
 GameObjectsFactory::GameObjectsFactory(EnttRegistryWrapper& registryWrapper, ComponentsFactory& componentsFactory, BaseObjectsFactory& baseObjectsFactory)
-  : registryWrapper(registryWrapper), registry(registryWrapper.GetRegistry()), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
+  : registryWrapper(registryWrapper), registry(registryWrapper), gameState(registry.get<GameOptions>(registry.view<GameOptions>().front())),
     box2dBodyCreator(registry), coordinatesTransformer(registry), bodyTuner(registry), componentsFactory(componentsFactory), baseObjectsFactory(baseObjectsFactory)
 {}
 
