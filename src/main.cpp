@@ -86,13 +86,13 @@ int main([[maybe_unused]] int argc, char* args[])
         SDLInitializerRAII sdlInitializer(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
         SDLAudioInitializerRAII sdlAudioInitializer;
         SDLWindowRAII window("Wofares Game Engine created by marleeeeeey", gameOptions.windowOptions.windowSize);
-        SDLRendererRAII renderer(window.get(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-        ImGuiSDLRAII imguiSDL(window.get(), renderer.get());
+        SDLRendererRAII renderer(window, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        ImGuiSDLRAII imguiSDL(window, renderer);
 
         std::filesystem::path assetsSettingsFilePath = "assets/assets_settings.json";
         auto assetsSettingsJson = utils::LoadJsonFromFile(assetsSettingsFilePath);
         MY_LOG(info, "Assets settings loaded: {}", assetsSettingsFilePath.string());
-        ResourceManager resourceManager(renderer.get(), assetsSettingsJson);
+        ResourceManager resourceManager(renderer, assetsSettingsJson);
         AudioSystem audioSystem(resourceManager);
         audioSystem.PlayMusic("background_music");
 
@@ -113,10 +113,10 @@ int main([[maybe_unused]] int argc, char* args[])
         GameStateControlSystem gameStateControlSystem(registryWrapper, inputEventManager);
 
         // Create a systems with no input events.
-        SdlPrimitivesRenderer primitivesRenderer(registryWrapper, renderer.get());
+        SdlPrimitivesRenderer primitivesRenderer(registryWrapper, renderer);
         PhysicsSystem physicsSystem(registryWrapper);
-        RenderWorldSystem RenderWorldSystem(registryWrapper, renderer.get(), resourceManager, primitivesRenderer);
-        RenderHUDSystem RenderHUDSystem(registryWrapper, renderer.get(), assetsSettingsJson);
+        RenderWorldSystem RenderWorldSystem(registryWrapper, renderer, resourceManager, primitivesRenderer);
+        RenderHUDSystem RenderHUDSystem(registryWrapper, renderer, assetsSettingsJson);
 
         // Auxiliary systems.
         ScreenModeControlSystem screenModeControlSystem(inputEventManager, window);
