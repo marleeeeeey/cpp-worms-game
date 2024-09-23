@@ -79,9 +79,6 @@ int main([[maybe_unused]] int argc, char* args[])
         // Create a game state entity.
         auto& gameOptions = registry.emplace<GameOptions>(registryWrapper.Create("GameOptions"), utils::GetConfig<GameOptions, "GameOptions">());
 
-        // Create a contact listener and subscribe it to the physics world.
-        Box2dEnttContactListener contactListener(registryWrapper);
-
         // Initialize SDL, create a window and a renderer. Initialize ImGui.
         SDLInitializerRAII sdlInitializer(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
         SDLAudioInitializerRAII sdlAudioInitializer;
@@ -101,6 +98,7 @@ int main([[maybe_unused]] int argc, char* args[])
         GameObjectsFactory gameObjectsFactory(registryWrapper, componentsFactory, baseObjectsFactory);
 
         // Create a weapon control system and subscribe it to the contact listener.
+        Box2dEnttContactListener contactListener(registryWrapper);
         WeaponControlSystem weaponControlSystem(registryWrapper, contactListener, audioSystem, baseObjectsFactory);
 
         // Create an input event manager and an event queue system.
